@@ -66,5 +66,4 @@ public class Produto implements Serializable {
     public void decrementarEstoque(int valor) {
         this.setEstoque(this.getEstoque()-valor);
     }
-
 }
