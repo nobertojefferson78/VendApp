@@ -22,6 +22,19 @@ public class ScriptSQL {
 
         return sqlBuilder.toString();
     }
+    public static String getCreateProduto() {
+        StringBuilder sqlBuilder = new StringBuilder();
 
+        sqlBuilder.append("CREATE TABLE IF NOT EXISTS PRODUTO (");
+        sqlBuilder.append("_id INTEGER NOT NULL");
+        sqlBuilder.append(" PRIMARY KEY AUTOINCREMENT,");
+        sqlBuilder.append("REFERENCIA VARCHAR(255),");
+        sqlBuilder.append("NOME VARCHAR(255),");
+        sqlBuilder.append("VALOR DOUBLE,");
+        sqlBuilder.append("ESTOQUE INTEGER");
+        sqlBuilder.append(");");
+
+        return sqlBuilder.toString();
+    }
 
 }

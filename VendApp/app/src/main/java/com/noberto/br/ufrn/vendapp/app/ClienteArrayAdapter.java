@@ -71,6 +71,4 @@ public class ClienteArrayAdapter extends ArrayAdapter<Cliente>{
         TextView txtNome;
         TextView txtTelefone;
     }
-
-
 }
