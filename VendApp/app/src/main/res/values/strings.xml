@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">VendApp</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Configurações</string>
+    <string name="mensagem_compartilhar">VendApp, o aplicativo que auxilia o seu negócio!</string>
+    <string name="title_activity_splash">VendApp</string>
+    <string name="tempoSplash">3000</string>
+    <string name="titulo">VendApp</string>
+    <string name="subtitulo">Sistema Básico para Controle de Vendas</string>
+    <string name="menu_sair">Sair</string>
+    <string name="menu_sobre">Sobre</string>
+    <string name="menu_compartilhar">Compartilhar</string>
+    <string name="mensagem_sobre"> Bem vindo!<n></n><t></t>O VendApp é ideal para pequenos comerciantes, pois possibilita um controle básico de estoque e de vendas.</string>
+    <string name="ok"> Ok </string>
+    <string name="mensagem_sair">Voltar?</string>
+    <string name="mensagem_cancelar">Cancelar</string>
+    <string name="mensagem_pergunta_editar">O que deseja Fazer?</string>
+    <string name="mensagem_editar">Editar</string>
+    <string name="mensagem_excluir">Excluir</string>
+
+    <string name="title_activity_formulario">Formulário - Cadastrar Cliente</string>
+    <string name="title_activity_form_vendas">Formulário - Cadastrar uma Venda</string>
+    <string name="title_activity_form_produtos">Formulário - Cadastrar um Produto</string>
+    <string name="action_share">Compartilhar</string>
+    <string name="title_activity_exibir_estoque">Exibir_estoque</string>
+</resources>

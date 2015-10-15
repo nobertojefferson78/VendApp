@@ -1,0 +1,199 @@
+package com.noberto.br.ufrn.vendapp;
+
+import android.app.DatePickerDialog;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+
+import com.noberto.br.ufrn.vendapp.app.MensageBox;
+import com.noberto.br.ufrn.vendapp.database.DataBase;
+import com.noberto.br.ufrn.vendapp.dominio.RepositorioCliente;
+import com.noberto.br.ufrn.vendapp.modelo.Cliente;
+import com.noberto.br.ufrn.vendapp.util.DatesUtil;
+
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+public class FormClienteActivity extends AppCompatActivity {
+
+    private EditText cpNome;
+    private EditText cpCpf;
+    private EditText cpTelefone;
+    private EditText cpEmail;
+    private EditText cpNascimento;
+    private RadioButton rbFeminio;
+    private RadioButton rbMasculino;
+    private Button btSalvarCliente;
+    private Button btCancelarCliente;
+
+    private ActionBar ab;
+
+    private DataBase dataBase;
+    private SQLiteDatabase connection;
+    private RepositorioCliente rpCliente;
+    private Cliente cliente;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_form_cliente);
+        //ab.setTitle(R.string.titulo);
+        //ab.setSubtitle(R.string.subtitulo);
+        //ab.setBackgroundDrawable(getResources().getDrawable(R.color.blue));
+        //ab.setIcon(R.mipmap.ic_launcher);
+        //ab.setDisplayShowHomeEnabled(true);
+        conectarInterface();
+
+        Bundle bundle = getIntent().getExtras();
+
+        //verifica se recuperou e o parametro eh cliente
+        if((bundle != null) && (bundle.containsKey(ExibirClientesActivity.PAR_CLIENTE))){
+
+            this.cliente = (Cliente)bundle.getSerializable(ExibirClientesActivity.PAR_CLIENTE);
+
+
+            preencheDados();
+
+        }else  cliente = new Cliente();
+
+        try {
+            dataBase = new DataBase(this);
+            connection = dataBase.getWritableDatabase();
+            rpCliente = new RepositorioCliente(connection);
+        }catch (SQLException ex){
+            MensageBox.show(this, "Erro no banco: " + ex.getMessage(), "ERRO!");
+        }
+
+
+
+
+    }
+
+    private void conectarInterface(){
+        cpNome = (EditText)findViewById(R.id.cpNome);
+        cpCpf = (EditText)findViewById(R.id.cpCpf);
+        cpTelefone = (EditText)findViewById(R.id.cpTelefone);
+        cpEmail = (EditText)findViewById(R.id.cpEmail);
+        cpNascimento = (EditText)findViewById(R.id.cpNascimento);
+        rbFeminio = (RadioButton)findViewById(R.id.rbFeminino);
+        rbMasculino = (RadioButton)findViewById(R.id.rbMasculino);
+
+
+        ExibeDataListener edl = new ExibeDataListener();
+        cpNascimento.setOnClickListener(edl);
+        cpNascimento.setKeyListener(null);
+
+        btSalvarCliente = (Button)findViewById(R.id.btSalvarCliente);
+        btSalvarCliente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                salvar();
+                finish();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(connection != null){
+            connection.close();
+        }
+    }
+
+    private void preencheDados(){
+        cpNome.setText(this.cliente.getNome());
+        cpCpf.setText(this.cliente.getCpf());
+        cpTelefone.setText(this.cliente.getTelefone());
+        cpEmail.setText(this.cliente.getEmail());
+        DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
+        String dt = format.format( cliente.getDataNascimento() );
+
+        cpNascimento.setText( dt );
+
+        if(cliente.getSexo().equalsIgnoreCase("Feminino")){
+            rbFeminio.setChecked(true);
+        }else{
+            rbFeminio.setChecked(false);
+            rbMasculino.setChecked(true);
+        }
+
+
+
+    }
+
+    public void salvar(){
+        try {
+
+
+            cliente.setNome(cpNome.getText().toString());
+            cliente.setCpf(cpCpf.getText().toString());
+            cliente.setTelefone(cpTelefone.getText().toString());
+            cliente.setEmail(cpEmail.getText().toString());
+            if(rbFeminio.isChecked()){
+                cliente.setSexo("Feminino");
+            }else{
+                cliente.setSexo("Masculino");
+            }
+
+            if(cliente.getId() == 0) {
+                rpCliente.inserir(cliente);
+            }else{
+                rpCliente.alterar(cliente);
+            }
+
+            MensageBox.show(this,"Estou salvando o condenado: " + cliente.getNome(), "Perfeito");
+        }catch (Exception ex){
+            MensageBox.show(this, "Erro ao inserir cliente: " + ex.getMessage(), "ERRO!");
+        }
+    }
+
+    private void exibeData(){
+        Calendar calendar = Calendar.getInstance();
+        int ano = calendar.get(calendar.YEAR);
+        int mes = calendar.get(calendar.MONTH);
+        int dia = calendar.get(calendar.DAY_OF_MONTH);
+
+        //usado para exibir o calendario
+        DatePickerDialog dlg = new DatePickerDialog(this, new SelecionaDataListener(), ano, mes, dia);
+        dlg.show();
+    }
+
+    private class ExibeDataListener implements View.OnClickListener, View.OnFocusChangeListener{
+
+        @Override
+        public void onClick(View v) {
+            exibeData();
+        }
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if(hasFocus) {
+                exibeData();
+            }
+        }
+    }
+
+    private class SelecionaDataListener implements DatePickerDialog.OnDateSetListener{
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+            String dataFormatada = DatesUtil.dateToString(year, monthOfYear, dayOfMonth);
+            Date data = DatesUtil.getDate(year, monthOfYear, dayOfMonth);
+
+            cpNascimento.setText(dataFormatada);
+            cliente.setDataNascimento(data);
+        }
+    }
+
+}
