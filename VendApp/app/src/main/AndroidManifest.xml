@@ -19,6 +19,14 @@
         </activity>
         <activity android:name=".ExibirClientesActivity" >
         </activity>
+        <activity
+            android:name=".FormProdutoActivity"
+            android:label="@string/title_activity_form_produto" >
+        </activity>
+        <activity
+            android:name=".ExibirProdutosActivity"
+            android:label="@string/title_activity_exibir_produtos" >
+        </activity>
     </application>
 
 </manifest>

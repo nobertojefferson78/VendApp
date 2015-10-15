@@ -22,8 +22,8 @@ public class ProdutoArrayAdapter extends ArrayAdapter<Produto> {
     public ProdutoArrayAdapter(Context context, int resource) {
         super(context, resource);
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.setResource(resource);
-        this.setContext(context);
+        this.resource = resource;
+        this.context = context;
     }
 
     @Override
@@ -36,9 +36,9 @@ public class ProdutoArrayAdapter extends ArrayAdapter<Produto> {
 
             view = inflater.inflate(resource, parent, false);
 
-           // viewHolder.txtProdCor = (TextView)view.findViewById(R.id.txtProdCor);
-           // viewHolder.txtProdNome = (TextView)view.findViewById(R.id.txtProdNome);
-           // viewHolder.txtProdReferencia = (TextView)view.findViewById(R.id.txtProdReferencia);
+            viewHolder.txtProdCor = (TextView)view.findViewById(R.id.txtCor);
+            viewHolder.txtProdNome = (TextView)view.findViewById(R.id.txtNome);
+            viewHolder.txtProdReferencia = (TextView)view.findViewById(R.id.txtTelefone);
 
             view.setTag(viewHolder);
 
@@ -54,25 +54,6 @@ public class ProdutoArrayAdapter extends ArrayAdapter<Produto> {
         viewHolder.txtProdReferencia.setText(produto.getReferencia());
 
         return view;
-    }
-
-    public void setResource(int resource) {
-        this.resource = resource;
-    }
-    public int getResource() {
-        return this.resource;
-    }
-    public void setInflater(LayoutInflater inflater) {
-        this.inflater = inflater;
-    }
-    public LayoutInflater getInflater() {
-        return this.inflater;
-    }
-    public void setContext(Context context) {
-        this.context = context;
-    }
-    public Context getContext() {
-        return this.context;
     }
 
     static class ViewHolder {

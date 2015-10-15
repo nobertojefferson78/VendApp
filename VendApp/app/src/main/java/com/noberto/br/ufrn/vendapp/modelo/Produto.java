@@ -16,8 +16,7 @@ public class Produto implements Serializable {
     public static String ESTOQUE = "ESTOQUE";
 
     private long id;
-    private String referencia;
-    private String nome;
+    private String referencia, nome;
     private double valor;
     private int estoque;
 
