@@ -31,12 +31,25 @@ public class PrincipalActivity extends AppCompatActivity {
                 carregarTelaCadastroCliente();
             }
         });
-
         Button btExibirCliente = (Button)findViewById(R.id.btRelatorioClientes);
         btExibirCliente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 carregarTelaExibirCliente();
+            }
+        });
+        Button btCadastroProduto = (Button) findViewById(R.id.btCadastroProdutos);
+        btCadastroProduto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                carregarTelaCadastroProduto();
+            }
+        });
+        Button btExibirProduto = (Button) findViewById(R.id.btRelatorioEstoque);
+        btExibirProduto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                carregarTelaExibirProduto();
             }
         });
     }
@@ -45,9 +58,16 @@ public class PrincipalActivity extends AppCompatActivity {
         Intent intent = new Intent(this, FormClienteActivity.class);
         startActivity(intent);
     }
-
     private void carregarTelaExibirCliente(){
         Intent it = new Intent(this, ExibirClientesActivity.class);
+        startActivity(it);
+    }
+    private void carregarTelaCadastroProduto() {
+        Intent it = new Intent(this, FormProdutoActivity.class);
+        startActivity(it);
+    }
+    private void carregarTelaExibirProduto() {
+        Intent it = new Intent(this, ExibirProdutosActivity.class);
         startActivity(it);
     }
 }

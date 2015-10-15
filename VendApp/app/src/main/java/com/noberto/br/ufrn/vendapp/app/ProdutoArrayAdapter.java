@@ -8,20 +8,18 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.noberto.br.ufrn.vendapp.R;
-import com.noberto.br.ufrn.vendapp.modelo.Cliente;
-
+import com.noberto.br.ufrn.vendapp.modelo.Produto;
 
 /**
- * Created by PauloVinicius on 16/05/2015.
+ * Created by André on 15/10/2015.
  */
-public class ClienteArrayAdapter extends ArrayAdapter<Cliente>{
+public class ProdutoArrayAdapter extends ArrayAdapter<Produto> {
 
     private int resource = 0;
     private LayoutInflater inflater;
     private Context context;
 
-    public ClienteArrayAdapter(Context context, int resource)
-    {
+    public ProdutoArrayAdapter(Context context, int resource) {
         super(context, resource);
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.resource = resource;
@@ -29,46 +27,36 @@ public class ClienteArrayAdapter extends ArrayAdapter<Cliente>{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
-
+    public View getView(int position, View convertView, ViewGroup parent) {
         View view = null;
         ViewHolder viewHolder = null;
 
-        if (convertView == null)
-        {
+        if(convertView == null) {
             viewHolder = new ViewHolder();
 
             view = inflater.inflate(resource, parent, false);
 
-            viewHolder.txtCor = (TextView)view.findViewById(R.id.txtCor);
-            viewHolder.txtNome = (TextView)view.findViewById(R.id.txtNome);
-            viewHolder.txtTelefone = (TextView)view.findViewById(R.id.txtTelefone);
+            viewHolder.txtProdCor = (TextView)view.findViewById(R.id.txtCor);
+            viewHolder.txtProdNome = (TextView)view.findViewById(R.id.txtNome);
+            viewHolder.txtProdReferencia = (TextView)view.findViewById(R.id.txtTelefone);
 
             view.setTag(viewHolder);
 
             convertView = view;
-
-        }
-        else
-        {
+        }else {
             viewHolder = (ViewHolder)convertView.getTag();
             view = convertView;
         }
 
-        Cliente contato = getItem(position);
+        Produto produto = getItem(position);
 
-        viewHolder.txtNome.setText(contato.getNome());
-        viewHolder.txtTelefone.setText(contato.getTelefone());
+        viewHolder.txtProdNome.setText(produto.getNome());
+        viewHolder.txtProdReferencia.setText(produto.getReferencia());
 
         return view;
-
     }
 
-    static class ViewHolder
-    {
-        TextView txtCor;
-        TextView txtNome;
-        TextView txtTelefone;
+    static class ViewHolder {
+        TextView txtProdCor, txtProdNome, txtProdReferencia;
     }
 }
