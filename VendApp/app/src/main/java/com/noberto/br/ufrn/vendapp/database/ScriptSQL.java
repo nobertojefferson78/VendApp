@@ -37,4 +37,18 @@ public class ScriptSQL {
         return sqlBuilder.toString();
     }
 
+    public static String getCreateItemVenda() {
+        StringBuilder sqlBuilder = new StringBuilder();
+
+        sqlBuilder.append("CREATE TABLE IN NOT EXISTS ITEM_VENDA (");
+        sqlBuilder.append("_id INTEGER NOT NULL");
+        sqlBuilder.append(" PRIMARY KEY AUTOINCREMENT,");
+        sqlBuilder.append("_id_PRODUTO NOT NULL,");
+        sqlBuilder.append("FOREIGN KEY");
+        sqlBuilder.append("QUANTIDADE INTEGER NOT NULL");
+        sqlBuilder.append(");");
+
+        return sqlBuilder.toString();
+    }
+
 }
