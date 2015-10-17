@@ -18,6 +18,7 @@ public class DataBase extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(ScriptSQL.getCreateCliente());
         db.execSQL(ScriptSQL.getCreateProduto());
+        db.execSQL(ScriptSQL.getCreateItemVenda());
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

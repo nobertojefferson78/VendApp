@@ -21,6 +21,10 @@ public class ItemVenda implements Serializable {
         this.setId(0);
     }
 
+    public double calcularValor() {
+        return (this.getProduto().getValor()*this.getQuant());
+    }
+
     public void setId(long id) {
         this.id = id;
     }
