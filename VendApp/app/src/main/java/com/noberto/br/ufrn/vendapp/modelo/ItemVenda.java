@@ -12,6 +12,7 @@ public class ItemVenda implements Serializable {
     public static String ID = "_id";
     public static String PRODUTO = "_id_PRODUTO";
     public static String QUANTIDADE = "QUANTIDADE";
+    public static String VENDA = "_id_VENDA";
 
     private long id;
     private Produto produto;

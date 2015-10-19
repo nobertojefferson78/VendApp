@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/cpPesquisarClientes"
         android:hint="Pesquisar..."
-        android:text="Pesquisar..." />
+        android:text="" />
 
     <ListView
         android:layout_width="match_parent"

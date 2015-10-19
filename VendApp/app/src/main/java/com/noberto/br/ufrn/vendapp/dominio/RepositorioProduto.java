@@ -50,7 +50,7 @@ public class RepositorioProduto {
         connection.delete(Produto.TABELA, " _id = ? ", new String[]{String.valueOf(id)});
     }
     public ProdutoArrayAdapter buscarProdutos(Context context) {
-        ProdutoArrayAdapter produtoArrayAdapter = new ProdutoArrayAdapter(context, R.layout.lista_itens);
+        ProdutoArrayAdapter produtoArrayAdapter = new ProdutoArrayAdapter(context, R.layout.lista_itens_produto);
         Cursor cursor = connection.query(Produto.TABELA, null, null, null, null, null, null);
 
         if(cursor.getCount()>0) {
@@ -67,5 +67,28 @@ public class RepositorioProduto {
             }while(cursor.moveToNext());
         }
         return produtoArrayAdapter;
+    }
+    public Produto buscarPorId(long id) {
+
+        Cursor cursor = connection.query(Produto.TABELA, null, null, null, null, null, null);
+
+        if(cursor.getCount()>0) {
+            cursor.moveToNext();
+            do{
+                Produto produto = new Produto();
+                produto.setId(cursor.getLong(cursor.getColumnIndex(Produto.ID)));
+                produto.setReferencia(cursor.getString(cursor.getColumnIndex(Produto.REFERENCIA)));
+                produto.setNome(cursor.getString(cursor.getColumnIndex(Produto.NOME)));
+                produto.setValor(cursor.getDouble(cursor.getColumnIndex(Produto.VALOR)));
+                produto.setEstoque(cursor.getInt(cursor.getColumnIndex(Produto.ESTOQUE)));
+
+                if(produto.getId() == id) {
+                    return produto;
+                }
+
+            }while(cursor.moveToNext());
+        }
+
+        return null;
     }
 }
