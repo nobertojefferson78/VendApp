@@ -8,7 +8,7 @@ import android.database.sqlite.*;
  */
 public class DataBase extends SQLiteOpenHelper{
 
-    public static final String DB_CLIENTE = "CLIENTE";
+    public static final String DB_CLIENTE = "CLIENTE2";
 
     public DataBase(Context context){
         super(context, DB_CLIENTE, null, 1);

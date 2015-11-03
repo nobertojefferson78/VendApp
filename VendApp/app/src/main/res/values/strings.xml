@@ -26,4 +26,6 @@
     <string name="title_activity_exibir_estoque">Exibir_estoque</string>
     <string name="title_activity_form_produto">FormProdutoActivity</string>
     <string name="title_activity_exibir_produtos">ExibirProdutosActivity</string>
+    <string name="title_activity_form_venda">FormVendaActivity</string>
+    <string name="title_activity_exibir_vendas">ExibirVendasActivity</string>
 </resources>

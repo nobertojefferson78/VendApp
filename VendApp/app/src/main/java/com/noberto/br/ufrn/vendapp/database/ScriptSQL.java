@@ -40,11 +40,11 @@ public class ScriptSQL {
     public static String getCreateItemVenda() {
         StringBuilder sqlBuilder = new StringBuilder();
 
-        sqlBuilder.append("CREATE TABLE IN NOT EXISTS ITEM_VENDA (");
+        sqlBuilder.append("CREATE TABLE IF NOT EXISTS ITEM_VENDA (");
         sqlBuilder.append("_id INTEGER NOT NULL");
         sqlBuilder.append(" PRIMARY KEY AUTOINCREMENT,");
         sqlBuilder.append("_id_PRODUTO INTEGER NOT NULL,");
-        sqlBuilder.append("FOREIGN KEY");
+        //sqlBuilder.append("FOREIGN KEY,");
         sqlBuilder.append("QUANTIDADE INTEGER NOT NULL");
         sqlBuilder.append(");");
 
@@ -54,11 +54,11 @@ public class ScriptSQL {
     public static String getCreateVenda() {
         StringBuilder sqlBuilder = new StringBuilder();
 
-        sqlBuilder.append("CREATE TABLE IN NOT EXISTS VENDA (");
+        sqlBuilder.append("CREATE TABLE IF NOT EXISTS VENDA (");
         sqlBuilder.append("_id INTEGER NOT NULL");
         sqlBuilder.append(" PRIMARY KEY AUTOINCREMENT,");
         sqlBuilder.append("_id_CLIENTE INTEGER NOT NULL,");
-        sqlBuilder.append("FOREIGN KEY");
+       // sqlBuilder.append("FOREIGN KEY,");
         sqlBuilder.append("DATA DATE NOT NULL");
         sqlBuilder.append(");");
 

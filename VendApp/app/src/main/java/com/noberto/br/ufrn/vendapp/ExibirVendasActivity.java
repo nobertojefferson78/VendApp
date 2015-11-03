@@ -21,39 +21,46 @@ import android.widget.SearchView;
 
 import com.noberto.br.ufrn.vendapp.app.MensageBox;
 import com.noberto.br.ufrn.vendapp.database.DataBase;
+import com.noberto.br.ufrn.vendapp.dominio.RepositorioItemVenda;
 import com.noberto.br.ufrn.vendapp.dominio.RepositorioProduto;
 import com.noberto.br.ufrn.vendapp.modelo.Cliente;
 import com.noberto.br.ufrn.vendapp.modelo.Produto;
+import com.noberto.br.ufrn.vendapp.modelo.Venda;
 
-public class ExibirProdutosActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, MenuItem.OnMenuItemClickListener {
+public class ExibirVendasActivity extends AppCompatActivity implements MenuItem.OnMenuItemClickListener {
 
-    public static final String PAR_PRODUTO = "PRODUTO";
+    /*public static final String PAR_VENDAS = "VENDAS";
 
     //private EditText edtPesquisa;
-    private ListView lstProdutos;
-    private ArrayAdapter<Produto> adpProdutos;
+    private ListView lstVendas;
+    private ArrayAdapter<Produto> adpVendas;
     private DataBase dataBase;
     private SQLiteDatabase connection;
-    private RepositorioProduto repositorioProduto;
+    private RepositorioItemVenda repositorioVenda;
+    */
+
     private ActionBar ab;
     private MenuItem m1, m2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_exibir_produtos);
+        setContentView(R.layout.activity_exibir_vendas);
 
-      //  edtPesquisa = (EditText) findViewById(R.id.cpPesquisarProdutos);
-        lstProdutos = (ListView) findViewById(R.id.lstProduto);
+        //  edtPesquisa = (EditText) findViewById(R.id.cpPesquisarProdutos);
+        //lstVendas = (ListView) findViewById(R.id.lstVendas);
 
-        lstProdutos.setOnItemClickListener(this);
+        //lstVendas.setOnItemClickListener(this);
 
         ab = getSupportActionBar();
-        ab.setTitle("Produtos");
-        ab.setSubtitle("lista");
-        ab.setBackgroundDrawable(getResources().getDrawable(R.color.actionbar));
+        //ab.setTitle("Vendas");
+        //ab.setSubtitle("lista");
+        //ab.setBackgroundDrawable(getResources().getDrawable(R.color.actionbar));
 
     }
+
+    /*
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -68,48 +75,49 @@ public class ExibirProdutosActivity extends AppCompatActivity implements Adapter
     @Override
     public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
 
-        final Produto produto = adpProdutos.getItem(position);
+        final Venda venda = adpVendas.getItem(position);
 
         new AlertDialog.Builder(this).setMessage(R.string.mensagem_pergunta_editar).setCancelable(true)
                 .setNegativeButton(getString(R.string.mensagem_editar), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        editarProduto(view, produto);
+                        editarVenda(view, venda);
                     }
 
                 })
                 .setPositiveButton(getString(R.string.mensagem_excluir), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        excluirProduto(produto);
+                        excluirVenda(venda);
                     }
 
                 })
                 .show();
     }
 
-    public void editarProduto(View view, Produto produto) {
+    public void editarVenda(View view, Venda venda) {
         Intent it = new Intent(this, FormProdutoActivity.class);
-        it.putExtra(PAR_PRODUTO, produto);
+        it.putExtra(PAR_VENDAS, venda);
         startActivityForResult(it, 0);
     }
-    public void excluirProduto(Produto produto) {
-        repositorioProduto.excluir(produto.getId());
+    public void excluirVenda(Venda venda) {
+        repositorioVenda.excluir(venda.getId());
         atualizarLista();
     }
 
+    */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        conectarBanco();
+        //conectarBanco();
 
-        SearchFiltro searchFiltro = new SearchFiltro(adpProdutos);
+        //SearchFiltro searchFiltro = new SearchFiltro(adpVendas);
 
-        SearchView sv = new SearchView(this);
-        sv.setOnQueryTextListener(searchFiltro);
+        //SearchView sv = new SearchView(this);
+        //sv.setOnQueryTextListener(searchFiltro);
 
         m1 = menu.add(0, 0, 0, "Pesquisar");
         m1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        m1.setActionView(sv);
+        //m1.setActionView(sv);
         m1.setIcon(R.drawable.abc_ic_search_api_mtrl_alpha);
 
         m2 = menu.add(0, 0, 0, "Adicionar");
@@ -136,29 +144,33 @@ public class ExibirProdutosActivity extends AppCompatActivity implements Adapter
         return super.onOptionsItemSelected(item);
     }
 
-    public void atualizarLista() {
-        adpProdutos = repositorioProduto.buscarProdutos(this);
-        lstProdutos.setAdapter(adpProdutos);
-    }
-
-    public void atualizarProduto(View view, Produto produto) {
-        Intent intent = new Intent(this, FormProdutoActivity.class);
-        intent.putExtra(PAR_PRODUTO, produto);
-        startActivityForResult(intent, 0);
-    }
-
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        Intent it = new Intent(this, FormProdutoActivity.class);
+        Intent it = new Intent(this, FormVendaActivity.class);
         startActivityForResult(it, 0);
         return false;
     }
+
+    /*
+
+    public void atualizarLista() {
+        adpVendas = repositorioVenda.buscarProdutos(this);
+        lstVendas.setAdapter(adpVendas);
+    }
+
+    public void atualizarVenda(View view, Venda venda) {
+        Intent intent = new Intent(this, FormProdutoActivity.class);
+        intent.putExtra(PAR_VENDAS, venda);
+        startActivityForResult(intent, 0);
+    }
+
+
 
     public void conectarBanco(){
         try {
             dataBase = new DataBase(this);
             connection = dataBase.getWritableDatabase();
-            repositorioProduto = new RepositorioProduto(connection);
+            repositorioVenda = new RepositorioVenda(connection);
 
             adpProdutos = repositorioProduto.buscarProdutos(this);
             lstProdutos.setAdapter(adpProdutos);
@@ -191,5 +203,5 @@ public class ExibirProdutosActivity extends AppCompatActivity implements Adapter
             arrayAdapter.getFilter().filter(newText);
             return false;
         }
-    }
+    }*/
 }

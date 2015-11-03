@@ -8,12 +8,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
-        <activity android:name=".PrincipalActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity
+            android:name=".PrincipalActivity"
+            android:label="VendApp" >
         </activity>
         <activity android:name=".FormClienteActivity" >
         </activity>
@@ -26,6 +23,25 @@
         <activity
             android:name=".ExibirProdutosActivity"
             android:label="@string/title_activity_exibir_produtos" >
+        </activity>
+        <activity
+            android:name=".FormVendaActivity"
+            android:label="@string/title_activity_form_venda"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".Splash"
+            android:label="VendApp" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ExibirVendasActivity"
+            android:label="@string/title_activity_exibir_vendas"
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>
 
