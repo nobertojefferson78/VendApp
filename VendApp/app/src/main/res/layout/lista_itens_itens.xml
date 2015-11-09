@@ -39,23 +39,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Valor Total:"
-                android:id="@+id/labeItValor"
-                android:layout_row="1"
-                android:layout_column="0" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Valor"
-                android:id="@+id/txtItValor"
-                android:layout_column="2"
-                android:layout_row="1" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Quantidade:"
                 android:id="@+id/labelItQuantidade"
                 android:layout_row="0"

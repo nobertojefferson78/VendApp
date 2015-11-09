@@ -6,12 +6,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.SearchView;
 
 import com.noberto.br.ufrn.vendapp.app.MensageBox;
 import com.noberto.br.ufrn.vendapp.database.DataBase;
@@ -23,7 +26,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class FormClienteActivity extends AppCompatActivity {
+public class FormClienteActivity extends AppCompatActivity implements MenuItem.OnMenuItemClickListener {
 
     private EditText cpNome;
     private EditText cpCpf;
@@ -36,6 +39,7 @@ public class FormClienteActivity extends AppCompatActivity {
     private Button btCancelarCliente;
 
     private ActionBar ab;
+    private MenuItem m1;
 
     private DataBase dataBase;
     private SQLiteDatabase connection;
@@ -46,11 +50,7 @@ public class FormClienteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_cliente);
-        //ab.setTitle(R.string.titulo);
-        //ab.setSubtitle(R.string.subtitulo);
-        //ab.setBackgroundDrawable(getResources().getDrawable(R.color.blue));
-        //ab.setIcon(R.mipmap.ic_launcher);
-        //ab.setDisplayShowHomeEnabled(true);
+
         conectarInterface();
 
         Bundle bundle = getIntent().getExtras();
@@ -59,7 +59,7 @@ public class FormClienteActivity extends AppCompatActivity {
         if((bundle != null) && (bundle.containsKey(ExibirClientesActivity.PAR_CLIENTE))){
 
             this.cliente = (Cliente)bundle.getSerializable(ExibirClientesActivity.PAR_CLIENTE);
-
+            ab.setSubtitle("Editar");
 
             preencheDados();
 
@@ -79,6 +79,14 @@ public class FormClienteActivity extends AppCompatActivity {
     }
 
     private void conectarInterface(){
+
+        ab = getSupportActionBar();
+        ab.setTitle("Clientes");
+        ab.setSubtitle("Cadastrar");
+        ab.setBackgroundDrawable(getResources().getDrawable(R.color.blue));
+        ab.setIcon(R.mipmap.ic_launcher);
+        ab.setDisplayShowHomeEnabled(true);
+
         cpNome = (EditText)findViewById(R.id.cpNome);
         cpCpf = (EditText)findViewById(R.id.cpCpf);
         cpTelefone = (EditText)findViewById(R.id.cpTelefone);
@@ -118,7 +126,7 @@ public class FormClienteActivity extends AppCompatActivity {
         DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
         String dt = format.format( cliente.getDataNascimento() );
 
-        cpNascimento.setText( dt );
+        cpNascimento.setText(dt);
 
         if(cliente.getSexo().equalsIgnoreCase("Feminino")){
             rbFeminio.setChecked(true);
@@ -166,6 +174,38 @@ public class FormClienteActivity extends AppCompatActivity {
         //usado para exibir o calendario
         DatePickerDialog dlg = new DatePickerDialog(this, new SelecionaDataListener(), ano, mes, dia);
         dlg.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        m1 = menu.add(0, 0, 0, "Salvar");
+        m1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        m1.setIcon(R.drawable.abc_ic_search_api_mtrl_alpha);
+        m1.setOnMenuItemClickListener(this);
+
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_exibir_produtos, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        salvar();
+
+        return false;
     }
 
     private class ExibeDataListener implements View.OnClickListener, View.OnFocusChangeListener{

@@ -43,7 +43,7 @@ public class ExibirProdutosActivity extends AppCompatActivity implements Adapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exibir_produtos);
 
-      //  edtPesquisa = (EditText) findViewById(R.id.cpPesquisarProdutos);
+
         lstProdutos = (ListView) findViewById(R.id.lstProduto);
 
         lstProdutos.setOnItemClickListener(this);

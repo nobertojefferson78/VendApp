@@ -7,7 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.noberto.br.ufrn.vendapp.R;
 import com.noberto.br.ufrn.vendapp.app.ProdutoArrayAdapter;
+import com.noberto.br.ufrn.vendapp.modelo.Cliente;
 import com.noberto.br.ufrn.vendapp.modelo.Produto;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by André on 15/10/2015.
@@ -68,6 +72,30 @@ public class RepositorioProduto {
         }
         return produtoArrayAdapter;
     }
+
+    public ProdutoArrayAdapter buscarProdutoNome(Context context, String nome) {
+        ProdutoArrayAdapter produtoArrayAdapter = new ProdutoArrayAdapter(context, R.layout.lista_itens_produto);
+        Cursor cursor = connection.query(Produto.TABELA, null, null, null, null, null, null);
+
+        if(cursor.getCount()>0) {
+            cursor.moveToFirst();
+            do{
+                Produto produto = new Produto();
+                produto.setId(cursor.getLong(cursor.getColumnIndex(Produto.ID)));
+                produto.setReferencia(cursor.getString(cursor.getColumnIndex(Produto.REFERENCIA)));
+                produto.setNome(cursor.getString(cursor.getColumnIndex(Produto.NOME)));
+                produto.setValor(cursor.getDouble(cursor.getColumnIndex(Produto.VALOR)));
+                produto.setEstoque(cursor.getInt(cursor.getColumnIndex(Produto.ESTOQUE)));
+
+                if(produto.getNome().equalsIgnoreCase(nome)) {
+                    produtoArrayAdapter.add(produto);
+                }
+            }while(cursor.moveToNext());
+        }
+        return produtoArrayAdapter;
+    }
+
+
     public Produto buscarPorId(long id) {
 
         Cursor cursor = connection.query(Produto.TABELA, null, null, null, null, null, null);
@@ -90,5 +118,30 @@ public class RepositorioProduto {
         }
 
         return null;
+    }
+
+    public ArrayList<Produto> buscaListaProdutos(Context context){
+        ArrayList<Produto> produtos = new ArrayList<Produto>();
+
+        Cursor cursor = connection.query(Produto.TABELA, null, null, null, null, null, null);
+
+        cursor.moveToFirst();
+
+        if(cursor.getCount() > 0){
+            do{
+
+                Produto produto = new Produto();
+                produto.setId(cursor.getLong(cursor.getColumnIndex(Produto.ID)));
+                produto.setReferencia(cursor.getString(cursor.getColumnIndex(Produto.REFERENCIA)));
+                produto.setNome(cursor.getString(cursor.getColumnIndex(Produto.NOME)));
+                produto.setValor(cursor.getDouble(cursor.getColumnIndex(Produto.VALOR)));
+                produto.setEstoque(cursor.getInt(cursor.getColumnIndex(Produto.ESTOQUE)));
+
+                produtos.add(produto);
+
+            }while (cursor.moveToNext());
+        }
+
+        return produtos;
     }
 }

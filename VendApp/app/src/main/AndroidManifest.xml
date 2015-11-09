@@ -25,11 +25,6 @@
             android:label="@string/title_activity_exibir_produtos" >
         </activity>
         <activity
-            android:name=".FormVendaActivity"
-            android:label="@string/title_activity_form_venda"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-        <activity
             android:name=".Splash"
             android:label="VendApp" >
             <intent-filter>
@@ -38,10 +33,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".VendaItemActivity" >
+        </activity>
         <activity
             android:name=".ExibirVendasActivity"
-            android:label="@string/title_activity_exibir_vendas"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:label="@string/title_activity_exibir_vendas" >
+        </activity>
+        <activity
+            android:name=".FormVendaActivity"
+            android:label="@string/title_activity_form_venda" >
+        </activity>
+        <activity android:name=".ExibirProdutoVendaActivity" >
         </activity>
     </application>
 

@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.noberto.br.ufrn.vendapp.R;
 import com.noberto.br.ufrn.vendapp.modelo.Venda;
 
+import java.text.SimpleDateFormat;
+
 /**
  * Created by André on 19/10/2015.
  */
@@ -38,9 +40,9 @@ public class VendaArrayAdapter extends ArrayAdapter<Venda> {
 
             view = inflater.inflate(resource, parent, false);
 
-            viewHolder.txtProdNome = (TextView)view.findViewById(R.id.txtProdNome);
-            viewHolder.txtProdQuantidade = (TextView)view.findViewById(R.id.txtProdQuantidade);
-            viewHolder.txtProdValor = (TextView)view.findViewById(R.id.txtProdValor);
+            viewHolder.txtVendNomeCliente = (TextView)view.findViewById(R.id.txtVendCliente);
+            viewHolder.txtVendData = (TextView)view.findViewById(R.id.txtVendData);
+            viewHolder.txtVendValor = (TextView)view.findViewById(R.id.txtVendValor);
 
             view.setTag(viewHolder);
 
@@ -53,15 +55,20 @@ public class VendaArrayAdapter extends ArrayAdapter<Venda> {
 
         Venda venda = getItem(position);
 
-        viewHolder.txtProdNome.setText(venda.getCliente().getNome());
-        //viewHolder.txtProdQuantidade.setText(venda.getQuant());
-        //viewHolder.txtProdValor.setText("R$ " + itemVenda.calcularValor());
+        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/aaaa");
+        String data = formatador.format(venda.getDataVenda());
+
+
+
+        viewHolder.txtVendNomeCliente.setText(venda.getCliente().getNome());
+        viewHolder.txtVendData.setText(data);
+        viewHolder.txtVendValor.setText("R$ " + venda.getValorVenda());
 
         return view;
     }
 
     static class ViewHolder {
-        TextView txtProdNome, txtProdQuantidade, txtProdValor;
+        TextView txtVendNomeCliente, txtVendData, txtVendValor;
     }
 
 }

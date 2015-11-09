@@ -16,9 +16,13 @@ import com.noberto.br.ufrn.vendapp.modelo.ItemVenda;
 public class RepositorioItemVenda {
 
     private SQLiteDatabase connection;
+    RepositorioProduto repositorioProduto;
+    RepositorioVenda repositorioVenda;
 
     public RepositorioItemVenda(SQLiteDatabase connection) {
         this.setConnection(connection);
+        repositorioProduto = new RepositorioProduto(connection);
+        repositorioVenda = new RepositorioVenda(connection);
     }
 
     public void setConnection(SQLiteDatabase connection) {
@@ -32,6 +36,7 @@ public class RepositorioItemVenda {
         ContentValues values = new ContentValues();
 
         values.put(ItemVenda.PRODUTO, itemVenda.getProduto().getId());
+        values.put(ItemVenda.VENDA, itemVenda.getVenda().getId());
         values.put(ItemVenda.QUANTIDADE, itemVenda.getQuant());
 
         return values;
@@ -47,11 +52,9 @@ public class RepositorioItemVenda {
     public void excluir(long id) {
         connection.delete(ItemVenda.TABELA, " _id = ? ", new String[]{String.valueOf(id)});
     }
-    public ItemVendaArrayAdapter buscarProdutos(Context context) {
+    public ItemVendaArrayAdapter buscarItens(Context context) {
         ItemVendaArrayAdapter itemVendaArrayAdapter = new ItemVendaArrayAdapter(context, R.layout.lista_itens_produto);
         Cursor cursor = connection.query(ItemVenda.TABELA, null, null, null, null, null, null);
-
-        RepositorioProduto repositorioProduto = new RepositorioProduto(connection);
 
         if(cursor.getCount()>0) {
             cursor.moveToFirst();
@@ -59,9 +62,32 @@ public class RepositorioItemVenda {
                 ItemVenda itemVenda = new ItemVenda();
                 itemVenda.setId(cursor.getLong(cursor.getColumnIndex(ItemVenda.ID)));
                 itemVenda.setProduto(repositorioProduto.buscarPorId(cursor.getLong(cursor.getColumnIndex(ItemVenda.PRODUTO))));
+                itemVenda.setVenda(repositorioVenda.buscarPorId(cursor.getLong(cursor.getColumnIndex(ItemVenda.VENDA))));
                 itemVenda.setQuant(cursor.getInt(cursor.getColumnIndex(ItemVenda.QUANTIDADE)));
 
                 itemVendaArrayAdapter.add(itemVenda);
+            }while(cursor.moveToNext());
+        }
+        return itemVendaArrayAdapter;
+    }
+
+    public ItemVendaArrayAdapter buscarItensVendaId(Context context, Long id) {
+        ItemVendaArrayAdapter itemVendaArrayAdapter = new ItemVendaArrayAdapter(context, R.layout.lista_itens_produto);
+        Cursor cursor = connection.query(ItemVenda.TABELA, null, null, null, null, null, null);
+
+        if(cursor.getCount()>0) {
+            cursor.moveToFirst();
+            do{
+                ItemVenda itemVenda = new ItemVenda();
+                itemVenda.setId(cursor.getLong(cursor.getColumnIndex(ItemVenda.ID)));
+                itemVenda.setProduto(repositorioProduto.buscarPorId(cursor.getLong(cursor.getColumnIndex(ItemVenda.PRODUTO))));
+                itemVenda.setVenda(repositorioVenda.buscarPorId(cursor.getLong(cursor.getColumnIndex(ItemVenda.VENDA))));
+                itemVenda.setQuant(cursor.getInt(cursor.getColumnIndex(ItemVenda.QUANTIDADE)));
+
+
+                if(itemVenda.getVenda().getId() == id) {
+                    itemVendaArrayAdapter.add(itemVenda);
+                }
             }while(cursor.moveToNext());
         }
         return itemVendaArrayAdapter;

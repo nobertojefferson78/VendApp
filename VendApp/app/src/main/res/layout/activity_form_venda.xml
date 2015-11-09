@@ -21,30 +21,70 @@
         android:imeOptions="actionDone"
         />
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Cliente:"
+            android:imeOptions="actionNext"
+            android:id="@+id/textCliente"/>
+
+        <Spinner
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cpCompleteCliente"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Produto:"
+            android:imeOptions="actionNext"
+            android:id="@+id/textView12" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spnItenSelecionado" />
+    </LinearLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Cliente:"
-        android:imeOptions="actionNext"
-        android:id="@+id/textCliente"/>
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Quantidade:"
+        android:id="@+id/textView13" />
 
-    <Spinner
-        android:layout_width="fill_parent"
+    <EditText
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/cpCompleteCliente"
-        />
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/edtQuantidade" />
 
     <Button
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Adicionar Produto"
-        android:id="@+id/btAddItemProduto" />
+        android:id="@+id/btAdicionarProduto"
+        android:layout_gravity="center_horizontal" />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="147dp"
-        android:id="@+id/list_itemVenda"
+        android:id="@+id/lstItemVenda"
         android:layout_weight="0.13" />
 
     <TextView

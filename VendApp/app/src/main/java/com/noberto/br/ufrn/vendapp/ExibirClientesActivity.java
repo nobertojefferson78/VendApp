@@ -26,7 +26,7 @@ import com.noberto.br.ufrn.vendapp.modelo.Cliente;
 
 public class ExibirClientesActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, MenuItem.OnMenuItemClickListener {
 
-    private EditText edtPesquisa;
+
     private ListView lstClientes;
     private ArrayAdapter<Cliente> adpClientes;
 
@@ -43,7 +43,7 @@ public class ExibirClientesActivity extends AppCompatActivity implements Adapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exibir_clientes);
 
-        //edtPesquisa  = (EditText)findViewById(R.id.cpPesquisarClientes);
+
         lstClientes  = (ListView)findViewById(R.id.lstCliente);
 
         lstClientes.setOnItemClickListener(this);
@@ -51,7 +51,9 @@ public class ExibirClientesActivity extends AppCompatActivity implements Adapter
         ab = getSupportActionBar();
         ab.setTitle("Clientes");
         ab.setSubtitle("lista");
-        ab.setBackgroundDrawable(getResources().getDrawable(R.color.actionbar));
+        ab.setBackgroundDrawable(getResources().getDrawable(R.color.blue));
+        ab.setIcon(R.mipmap.ic_launcher);
+        ab.setDisplayShowHomeEnabled(true);
 
         conectarBanco();
     }

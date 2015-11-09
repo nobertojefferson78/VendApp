@@ -15,28 +15,32 @@ public class Venda implements Serializable {
     public static String ID = "_id";
     public static String CLIENTE = "_id_CLIENTE";
     public static String DATA = "DATA";
+    public static String VALORVENDA = "VALORVENDA";
 
     private long id;
     private Cliente cliente;
-    private ArrayList<ItemVenda> itensVenda;
+    private ArrayList<Produto> produtos = new ArrayList<Produto>();
     private Date dataVenda;
+    private int quantidade;
+    private double valorVenda;
 
     public Venda() {
         this.setId(0);
+        valorVenda = 0;
     }
 
-    public void addItemVenda(ItemVenda itemVenda) {
-        this.getItensVenda().add(itemVenda);
+    public void addProduto(Produto produto) {
+        this.getProdutos().add(produto);
     }
-    public void removeItemVenda(ItemVenda itemVenda) {
-        this.getItensVenda().remove(itemVenda);
+    public void removeItemVenda(Produto produto) {
+        this.getProdutos().remove(produto);
     }
 
     public double calcularValorTotal() {
         int valor = 0;
 
-        for(ItemVenda i: itensVenda) {
-            valor+=i.calcularValor();
+        for(Produto i: produtos) {
+            valor += (i.getValor()*this.getQuantidade());
         }
         return 0;
     }
@@ -53,11 +57,11 @@ public class Venda implements Serializable {
     public Cliente getCliente() {
         return this.cliente;
     }
-    public void setItensVenda(ArrayList<ItemVenda> itensVenda) {
-        this.itensVenda = itensVenda;
+    public void setProdutos(ArrayList<Produto> produtos) {
+        this.produtos = produtos;
     }
-    public List<ItemVenda> getItensVenda() {
-        return this.itensVenda;
+    public List<Produto> getProdutos() {
+        return this.produtos;
     }
     public void setDataVenda(Date dataVenda) {
         this.dataVenda = dataVenda;
@@ -66,4 +70,19 @@ public class Venda implements Serializable {
         return this.dataVenda;
     }
 
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public double getValorVenda() {
+        return valorVenda;
+    }
+
+    public void setValorVenda(double valorVenda) {
+        this.valorVenda += valorVenda;
+    }
 }

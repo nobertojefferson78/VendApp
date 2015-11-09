@@ -44,7 +44,7 @@ public class ScriptSQL {
         sqlBuilder.append("_id INTEGER NOT NULL");
         sqlBuilder.append(" PRIMARY KEY AUTOINCREMENT,");
         sqlBuilder.append("_id_PRODUTO INTEGER NOT NULL,");
-        //sqlBuilder.append("FOREIGN KEY,");
+        sqlBuilder.append("_id_VENDA INTERGER NOT NULL,");
         sqlBuilder.append("QUANTIDADE INTEGER NOT NULL");
         sqlBuilder.append(");");
 
@@ -58,7 +58,6 @@ public class ScriptSQL {
         sqlBuilder.append("_id INTEGER NOT NULL");
         sqlBuilder.append(" PRIMARY KEY AUTOINCREMENT,");
         sqlBuilder.append("_id_CLIENTE INTEGER NOT NULL,");
-       // sqlBuilder.append("FOREIGN KEY,");
         sqlBuilder.append("DATA DATE NOT NULL");
         sqlBuilder.append(");");
 

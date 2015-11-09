@@ -2,6 +2,7 @@ package com.noberto.br.ufrn.vendapp;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,15 +26,27 @@ public class FormProdutoActivity extends AppCompatActivity {
     private RepositorioProduto repositorioProduto;
     private Produto produto;
 
+    private ActionBar ab;
+    private MenuItem m1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_produto);
+        ab = getSupportActionBar();
+        ab.setTitle("Produtos");
+        ab.setSubtitle("Cadastrar");
+        ab.setBackgroundDrawable(getResources().getDrawable(R.color.blue));
+        ab.setIcon(R.mipmap.ic_launcher);
+        ab.setDisplayShowHomeEnabled(true);
+
+
         conectarInterface();
         Bundle bundle = getIntent().getExtras();
         if((bundle != null) && (bundle.containsKey(ExibirProdutosActivity.PAR_PRODUTO))){
 
             this.produto = (Produto)bundle.getSerializable(ExibirProdutosActivity.PAR_PRODUTO);
+            ab.setSubtitle("Editar");
             preencheDados();
 
         }else  produto = new Produto();
@@ -52,6 +65,30 @@ public class FormProdutoActivity extends AppCompatActivity {
         if(connection != null){
             connection.close();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        m1 = menu.add(0, 0, 0, "Salvar");
+        m1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        m1.setIcon(R.drawable.abc_ic_search_api_mtrl_alpha);
+
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_exibir_produtos, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void conectarInterface() {

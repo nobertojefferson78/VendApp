@@ -8,6 +8,8 @@ import android.database.sqlite.*;
 import com.noberto.br.ufrn.vendapp.R;
 import com.noberto.br.ufrn.vendapp.app.ClienteArrayAdapter;
 import com.noberto.br.ufrn.vendapp.modelo.Cliente;
+
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -42,13 +44,13 @@ public class RepositorioCliente {
 
     public void excluir(long id)
     {
-        connection.delete(Cliente.TABELA, " _id = ? ", new String[]{ String.valueOf( id ) });
+        connection.delete(Cliente.TABELA, " _id = ? ", new String[]{String.valueOf(id)});
     }
 
     public void alterar(Cliente cliente)
     {
         ContentValues values = preencheContentValues(cliente);
-        connection.update(Cliente.TABELA, values, " _id = ? ", new String[]{ String.valueOf( cliente.getId()) } );
+        connection.update(Cliente.TABELA, values, " _id = ? ", new String[]{String.valueOf(cliente.getId())});
 
     }
 
@@ -94,7 +96,59 @@ public class RepositorioCliente {
 
     }
 
+    public Cliente buscarPorId(long id) {
 
+        Cursor cursor = connection.query(Cliente.TABELA, null, null, null, null, null, null);
+
+        if(cursor.getCount()>0) {
+            cursor.moveToNext();
+            do{
+                Cliente cliente = new Cliente();
+                cliente.setId(cursor.getLong(cursor.getColumnIndex(Cliente.ID)));
+                cliente.setCpf(cursor.getString(cursor.getColumnIndex(Cliente.CPF)));
+                cliente.setNome(cursor.getString(cursor.getColumnIndex(Cliente.NOME)));
+                cliente.setEmail(cursor.getString(cursor.getColumnIndex(Cliente.EMAIL)));
+                cliente.setTelefone(cursor.getString(cursor.getColumnIndex(Cliente.TELEFONE)));
+                cliente.setSexo(cursor.getString(cursor.getColumnIndex(Cliente.SEXO)));
+                cliente.setDataNascimento(new Date(cursor.getLong(cursor.getColumnIndex(Cliente.DATANASCIMENTO))));
+
+                if(cliente.getId() == id) {
+                    return cliente;
+                }
+
+            }while(cursor.moveToNext());
+        }
+
+        return null;
+    }
+
+    public ArrayList<Cliente> buscaListaClientes(Context context){
+        ArrayList<Cliente> clientes = new ArrayList<Cliente>();
+
+        Cursor cursor = connection.query(Cliente.TABELA, null, null, null, null, null, null);
+
+        cursor.moveToFirst();
+
+        if(cursor.getCount() > 0){
+            do{
+
+                Cliente cliente = new Cliente();
+
+                cliente.setId(cursor.getLong(cursor.getColumnIndex(Cliente.ID)));
+                cliente.setCpf(cursor.getString(cursor.getColumnIndex(Cliente.CPF)));
+                cliente.setNome(cursor.getString(cursor.getColumnIndex(Cliente.NOME)));
+                cliente.setEmail(cursor.getString(cursor.getColumnIndex(Cliente.EMAIL)));
+                cliente.setTelefone(cursor.getString(cursor.getColumnIndex(Cliente.TELEFONE)));
+                cliente.setSexo(cursor.getString(cursor.getColumnIndex(Cliente.SEXO)));
+                cliente.setDataNascimento(new Date(cursor.getLong(cursor.getColumnIndex(Cliente.DATANASCIMENTO))));
+
+                clientes.add(cliente);
+
+            }while (cursor.moveToNext());
+        }
+
+        return clientes;
+    }
 
 
 }

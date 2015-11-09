@@ -5,8 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,129 +21,90 @@ import android.widget.SearchView;
 
 import com.noberto.br.ufrn.vendapp.app.MensageBox;
 import com.noberto.br.ufrn.vendapp.database.DataBase;
-import com.noberto.br.ufrn.vendapp.dominio.RepositorioCliente;
-import com.noberto.br.ufrn.vendapp.dominio.RepositorioVenda;
+import com.noberto.br.ufrn.vendapp.dominio.RepositorioProduto;
 import com.noberto.br.ufrn.vendapp.modelo.Cliente;
-import com.noberto.br.ufrn.vendapp.modelo.Venda;
+import com.noberto.br.ufrn.vendapp.modelo.Produto;
 
-public class ExibirVendasActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, MenuItem.OnMenuItemClickListener {
+public class ExibirProdutoVendaActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, MenuItem.OnMenuItemClickListener {
+
+    public static final String PAR_PRODUTO = "PRODUTO";
 
 
-    private ListView lstVenda;
-    private ArrayAdapter<Venda> adpVendas;
-
+    private ListView lstProdutos;
+    private ArrayAdapter<Produto> adpProdutos;
     private DataBase dataBase;
-    private SQLiteDatabase conn;
-    private RepositorioVenda repositorioVenda;
+    private SQLiteDatabase connection;
+    private RepositorioProduto repositorioProduto;
     private ActionBar ab;
-    private MenuItem m1, m2;
-
-    public static final String PAR_VENDA = "VENDA";
+    private MenuItem m1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_exibir_vendas);
+        setContentView(R.layout.activity_exibir_produtos);
 
+        //  edtPesquisa = (EditText) findViewById(R.id.cpPesquisarProdutos);
+        lstProdutos = (ListView) findViewById(R.id.lstProduto);
 
-        lstVenda  = (ListView)findViewById(R.id.lstVenda);
-        //lstClientes.setOnItemClickListener(this);
+        lstProdutos.setOnItemClickListener(this);
 
         ab = getSupportActionBar();
-        ab.setTitle("Vendas");
+        ab.setTitle("Produtos");
         ab.setSubtitle("lista");
-        ab.setBackgroundDrawable(getResources().getDrawable(R.color.blue));
-        ab.setIcon(R.mipmap.ic_launcher);
-        ab.setDisplayShowHomeEnabled(true);
+        ab.setBackgroundDrawable(getResources().getDrawable(R.color.actionbar));
 
-        conectarBanco();
     }
-
-    public void conectarBanco(){
-        try {
-
-            dataBase = new DataBase(this);
-            conn = dataBase.getWritableDatabase();
-            repositorioVenda = new RepositorioVenda(conn);
-
-            adpVendas = repositorioVenda.buscarVendas(this);
-            lstVenda.setAdapter(adpVendas);
-
-        }catch(SQLException ex)
-        {
-            MensageBox.show(this, "Erro", "Erro ao criar o banco: " + ex.getMessage());
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (conn != null){
-            conn.close();
+        if (connection != null){
+            connection.close();
         }
-    }
 
+
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         atualizarLista();
     }
-
     @Override
     public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
 
-        final Venda venda = adpVendas.getItem(position);
+        final Produto produto = adpProdutos.getItem(position);
 
         new AlertDialog.Builder(this).setMessage(R.string.mensagem_pergunta_editar).setCancelable(true)
                 .setNegativeButton(getString(R.string.mensagem_editar), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                        editarVenda(view, venda);
+                        editarProduto(view, produto);
                     }
 
                 })
                 .setPositiveButton(getString(R.string.mensagem_excluir), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                        excluirVenda(venda);
+                        excluirProduto(produto);
                     }
 
                 })
                 .show();
-
     }
 
-    public void editarVenda(View view, Venda venda){
+    public void editarProduto(View view, Produto produto) {
         Intent it = new Intent(this, FormVendaActivity.class);
-
-        it.putExtra(PAR_VENDA, venda);
-
+        it.putExtra(PAR_PRODUTO, produto);
         startActivityForResult(it, 0);
     }
-
-    public void excluirVenda(Venda venda){
-        repositorioVenda.excluir(venda.getId());
+    public void excluirProduto(Produto produto) {
+        repositorioProduto.excluir(produto.getId());
         atualizarLista();
-    }
-
-    public void atualizarLista(){
-        adpVendas = repositorioVenda.buscarVendas(this);
-
-        lstVenda.setAdapter(adpVendas);
-        SearchFiltro searchFiltro = new SearchFiltro(adpVendas);
-
-        SearchView sv = new SearchView(this);
-        sv.setOnQueryTextListener(searchFiltro);
-
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         conectarBanco();
 
-        SearchFiltro searchFiltro = new SearchFiltro(adpVendas);
+        SearchFiltro searchFiltro = new SearchFiltro(adpProdutos);
 
         SearchView sv = new SearchView(this);
         sv.setOnQueryTextListener(searchFiltro);
@@ -153,17 +114,14 @@ public class ExibirVendasActivity extends AppCompatActivity implements AdapterVi
         m1.setActionView(sv);
         m1.setIcon(R.drawable.abc_ic_search_api_mtrl_alpha);
 
-        m2 = menu.add(0, 0, 0, "Adicionar");
-        m2.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        m2.setIcon(R.drawable.adicionarr);
-        m2.setOnMenuItemClickListener(this);
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_exibir_produtos, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -174,23 +132,48 @@ public class ExibirVendasActivity extends AppCompatActivity implements AdapterVi
         return super.onOptionsItemSelected(item);
     }
 
+    public void atualizarLista() {
+        adpProdutos = repositorioProduto.buscarProdutos(this);
+        lstProdutos.setAdapter(adpProdutos);
+    }
+
+    public void atualizarProduto(View view, Produto produto) {
+        Intent intent = new Intent(this, FormProdutoActivity.class);
+        intent.putExtra(PAR_PRODUTO, produto);
+        startActivityForResult(intent, 0);
+    }
+
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        Intent it = new Intent(this, FormVendaActivity.class);
+        Intent it = new Intent(this, FormProdutoActivity.class);
         startActivityForResult(it, 0);
         return false;
     }
 
+    public void conectarBanco(){
+        try {
+            dataBase = new DataBase(this);
+            connection = dataBase.getWritableDatabase();
+            repositorioProduto = new RepositorioProduto(connection);
+
+            adpProdutos = repositorioProduto.buscarProdutos(this);
+            lstProdutos.setAdapter(adpProdutos);
+
+        }catch(SQLException e) {
+            MensageBox.show(this, "Erro", "Erro ao criar o banco: " + e.getMessage());
+        }
+    }
+
     private class SearchFiltro implements SearchView.OnQueryTextListener {
 
-        private ArrayAdapter<Venda> arrayAdapter;
+        private ArrayAdapter<Produto> arrayAdapter;
 
         //inicializa com o construtor recebendo  o parametro do array que utilizou
-        private SearchFiltro(ArrayAdapter<Venda> arrayAdapter){
+        private SearchFiltro(ArrayAdapter<Produto> arrayAdapter){
             this.arrayAdapter = arrayAdapter;
         }
 
-        public void setArrayAdapter(ArrayAdapter<Venda> arrayAdapter){
+        public void setArrayAdapter(ArrayAdapter<Produto> arrayAdapter){
             this.arrayAdapter = arrayAdapter;
         }
 

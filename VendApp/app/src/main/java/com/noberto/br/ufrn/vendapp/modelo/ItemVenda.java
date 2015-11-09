@@ -11,11 +11,13 @@ public class ItemVenda implements Serializable {
     public static String TABELA = "ITEM_VENDA";
     public static String ID = "_id";
     public static String PRODUTO = "_id_PRODUTO";
-    public static String QUANTIDADE = "QUANTIDADE";
     public static String VENDA = "_id_VENDA";
+    public static String QUANTIDADE = "QUANTIDADE";
+
 
     private long id;
     private Produto produto;
+    private Venda venda;
     private int quant;
 
     public ItemVenda() {
@@ -43,5 +45,12 @@ public class ItemVenda implements Serializable {
     }
     public int getQuant() {
         return this.quant;
+    }
+    public Venda getVenda() {
+        return venda;
+    }
+
+    public void setVenda(Venda venda) {
+        this.venda = venda;
     }
 }
