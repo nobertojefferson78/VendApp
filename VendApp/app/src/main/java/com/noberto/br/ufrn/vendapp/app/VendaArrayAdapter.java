@@ -55,7 +55,7 @@ public class VendaArrayAdapter extends ArrayAdapter<Venda> {
 
         Venda venda = getItem(position);
 
-        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/aaaa");
+        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
         String data = formatador.format(venda.getDataVenda());
 
 

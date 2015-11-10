@@ -50,9 +50,10 @@ public class ExibirProdutosActivity extends AppCompatActivity implements Adapter
 
         ab = getSupportActionBar();
         ab.setTitle("Produtos");
-        ab.setSubtitle("lista");
-        ab.setBackgroundDrawable(getResources().getDrawable(R.color.actionbar));
-
+        ab.setSubtitle("Lista");
+        ab.setBackgroundDrawable(getResources().getDrawable(R.color.blue));
+        ab.setIcon(R.mipmap.ic_launcher);
+        ab.setDisplayShowHomeEnabled(true);
     }
     @Override
     protected void onDestroy() {

@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -48,6 +49,7 @@ public class FormVendaActivity extends AppCompatActivity implements View.OnClick
     private EditText cpDataVenda, edtQuntidade;
     private TextView cpValorTotal;
     private Button btAdicionarProduto;
+    private AutoCompleteTextView autoTvProdutosVenda;
 
     private ListView lstItemVenda;
     private ArrayAdapter<ItemVenda> adpItemVendas;
@@ -122,6 +124,7 @@ public class FormVendaActivity extends AppCompatActivity implements View.OnClick
         btAdicionarProduto = (Button)findViewById(R.id.btAdicionarProduto);
         edtQuntidade = (EditText)findViewById(R.id.edtQuantidade);
         cpValorTotal = (TextView)findViewById(R.id.cpValorTotal);
+        autoTvProdutosVenda = (AutoCompleteTextView)findViewById(R.id.autoTvProdutosVenda);
 
 
         btAdicionarProduto.setOnClickListener(this);
@@ -166,6 +169,13 @@ public class FormVendaActivity extends AppCompatActivity implements View.OnClick
             Produto produto = produtoLista.get(i);
             getAdaptadorItemVenda.add(produto.getNome());
         }
+
+        ArrayList<String> nomesProdutos = repositorioProduto.buscaNomesProdutos(this);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, nomesProdutos);
+
+        autoTvProdutosVenda.setAdapter(adapter);
+
     }
 
     public void salvar(){
@@ -185,6 +195,8 @@ public class FormVendaActivity extends AppCompatActivity implements View.OnClick
         }
 
         repositorioVenda.inserir(venda);
+
+        finish();
     }
 
     private void exibeData(){
@@ -258,7 +270,6 @@ public class FormVendaActivity extends AppCompatActivity implements View.OnClick
 
         m1 = menu.add(0, 0, 0, "Salvar");
         m1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        //m1.setIcon(R.drawable.abc_ic_search_api_mtrl_alpha);
         m1.setOnMenuItemClickListener(this);
 
         // Inflate the menu; this adds items to the action bar if it is present.

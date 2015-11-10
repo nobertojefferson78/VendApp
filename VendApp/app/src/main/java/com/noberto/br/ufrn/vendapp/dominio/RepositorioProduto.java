@@ -144,4 +144,30 @@ public class RepositorioProduto {
 
         return produtos;
     }
+
+    public ArrayList<String> buscaNomesProdutos(Context context){
+        ArrayList<String> produtos = new ArrayList<String>();
+
+        Cursor cursor = connection.query(Produto.TABELA, null, null, null, null, null, null);
+
+        cursor.moveToFirst();
+
+
+        if(cursor.getCount() > 0){
+            Produto produto;
+            do{
+                produto = new Produto();
+                produto.setId(cursor.getLong(cursor.getColumnIndex(Produto.ID)));
+                produto.setReferencia(cursor.getString(cursor.getColumnIndex(Produto.REFERENCIA)));
+                produto.setNome(cursor.getString(cursor.getColumnIndex(Produto.NOME)));
+                produto.setValor(cursor.getDouble(cursor.getColumnIndex(Produto.VALOR)));
+                produto.setEstoque(cursor.getInt(cursor.getColumnIndex(Produto.ESTOQUE)));
+
+                produtos.add(produto.getNome());
+
+            }while (cursor.moveToNext());
+        }
+
+        return produtos;
+    }
 }

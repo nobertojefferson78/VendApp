@@ -78,7 +78,7 @@ public class FormClienteActivity extends AppCompatActivity implements MenuItem.O
 
     }
 
-    private void conectarInterface(){
+    private void conectarInterface() {
 
         ab = getSupportActionBar();
         ab.setTitle("Clientes");
@@ -87,27 +87,18 @@ public class FormClienteActivity extends AppCompatActivity implements MenuItem.O
         ab.setIcon(R.mipmap.ic_launcher);
         ab.setDisplayShowHomeEnabled(true);
 
-        cpNome = (EditText)findViewById(R.id.cpNome);
-        cpCpf = (EditText)findViewById(R.id.cpCpf);
-        cpTelefone = (EditText)findViewById(R.id.cpTelefone);
-        cpEmail = (EditText)findViewById(R.id.cpEmail);
-        cpNascimento = (EditText)findViewById(R.id.cpNascimento);
-        rbFeminio = (RadioButton)findViewById(R.id.rbFeminino);
-        rbMasculino = (RadioButton)findViewById(R.id.rbMasculino);
+        cpNome = (EditText) findViewById(R.id.cpNome);
+        cpCpf = (EditText) findViewById(R.id.cpCpf);
+        cpTelefone = (EditText) findViewById(R.id.cpTelefone);
+        cpEmail = (EditText) findViewById(R.id.cpEmail);
+        cpNascimento = (EditText) findViewById(R.id.cpNascimento);
+        rbFeminio = (RadioButton) findViewById(R.id.rbFeminino);
+        rbMasculino = (RadioButton) findViewById(R.id.rbMasculino);
 
 
         ExibeDataListener edl = new ExibeDataListener();
         cpNascimento.setOnClickListener(edl);
         cpNascimento.setKeyListener(null);
-
-        btSalvarCliente = (Button)findViewById(R.id.btSalvarCliente);
-        btSalvarCliente.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                salvar();
-                finish();
-            }
-        });
     }
 
     @Override
@@ -159,7 +150,7 @@ public class FormClienteActivity extends AppCompatActivity implements MenuItem.O
                 rpCliente.alterar(cliente);
             }
 
-            MensageBox.show(this,"Estou salvando o condenado: " + cliente.getNome(), "Perfeito");
+            MensageBox.show(this,"O cliente: " + cliente.getNome() + " foi salvo", "Perfeito");
         }catch (Exception ex){
             MensageBox.show(this, "Erro ao inserir cliente: " + ex.getMessage(), "ERRO!");
         }
@@ -181,7 +172,6 @@ public class FormClienteActivity extends AppCompatActivity implements MenuItem.O
 
         m1 = menu.add(0, 0, 0, "Salvar");
         m1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        m1.setIcon(R.drawable.abc_ic_search_api_mtrl_alpha);
         m1.setOnMenuItemClickListener(this);
 
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -204,6 +194,7 @@ public class FormClienteActivity extends AppCompatActivity implements MenuItem.O
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         salvar();
+        finish();
 
         return false;
     }

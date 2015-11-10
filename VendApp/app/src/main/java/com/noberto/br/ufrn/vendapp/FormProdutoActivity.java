@@ -17,7 +17,7 @@ import com.noberto.br.ufrn.vendapp.dominio.RepositorioProduto;
 import com.noberto.br.ufrn.vendapp.modelo.Produto;
 
 
-public class FormProdutoActivity extends AppCompatActivity {
+public class FormProdutoActivity extends AppCompatActivity implements MenuItem.OnMenuItemClickListener {
 
     private EditText cpProdReferencia, cpProdNome, cpProdValor, cpProdEstoque;
     private Button btSalvarProduto, btCancelarProduto;
@@ -72,7 +72,7 @@ public class FormProdutoActivity extends AppCompatActivity {
 
         m1 = menu.add(0, 0, 0, "Salvar");
         m1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        m1.setIcon(R.drawable.abc_ic_search_api_mtrl_alpha);
+        m1.setOnMenuItemClickListener(this);
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_exibir_produtos, menu);
@@ -97,22 +97,7 @@ public class FormProdutoActivity extends AppCompatActivity {
         cpProdValor = (EditText) findViewById(R.id.cpProdValor);
         cpProdEstoque = (EditText) findViewById(R.id.cpProdEstoque);
 
-        btSalvarProduto = (Button) findViewById(R.id.btSalvarProduto);
-        btSalvarProduto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                salvar();
-                finish();
-            }
-        });
 
-        btCancelarProduto = (Button) findViewById(R.id.btCancelarProduto);
-        btCancelarProduto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO
-            }
-        });
     }
     public void preencheDados(){
         cpProdReferencia.setText(this.produto.getReferencia());
@@ -132,9 +117,17 @@ public class FormProdutoActivity extends AppCompatActivity {
             }else{
                 repositorioProduto.alterar(produto);
             }
-            MensageBox.show(this,"Estou salvando o condenado: " + produto.getNome(), "Perfeito");
+
         } catch(Exception e) {
             MensageBox.show(this, "Erro ao inserir produto: " + e.getMessage(), "ERRO!");
         }
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        salvar();
+        MensageBox.show(this, "O produto: " + produto.getNome() + " foi salvo", "Perfeito");
+        this.finish();
+        return false;
     }
 }
