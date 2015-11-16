@@ -58,6 +58,8 @@ public class ScriptSQL {
         sqlBuilder.append("_id INTEGER NOT NULL");
         sqlBuilder.append(" PRIMARY KEY AUTOINCREMENT,");
         sqlBuilder.append("_id_CLIENTE INTEGER NOT NULL,");
+        //procure para inserir double em sql
+        sqlBuilder.append("VALORVENDA DOUBLE(9,2),");
         sqlBuilder.append("DATA DATE NOT NULL");
         sqlBuilder.append(");");
 

@@ -39,8 +39,9 @@ public class ItemVendaArrayAdapter extends ArrayAdapter<ItemVenda> {
             view = inflater.inflate(resource, parent, false);
 
             viewHolder.txtProdNome = (TextView)view.findViewById(R.id.txtProdNome);
-            viewHolder.txtProdQuantidade = (TextView)view.findViewById(R.id.txtProdQuantidade);
-            viewHolder.txtProdValor = (TextView)view.findViewById(R.id.txtProdValor);
+            viewHolder.txtProdRef = (TextView)view.findViewById(R.id.txtProdRef);
+            viewHolder.txtProdQuantidade = (TextView)view.findViewById(R.id.txtQuantidadeItem);
+            viewHolder.txtProdValor = (TextView)view.findViewById(R.id.txtProdValorItem);
 
             view.setTag(viewHolder);
 
@@ -54,14 +55,15 @@ public class ItemVendaArrayAdapter extends ArrayAdapter<ItemVenda> {
         ItemVenda itemVenda = getItem(position);
 
         viewHolder.txtProdNome.setText(itemVenda.getProduto().getNome());
-        viewHolder.txtProdQuantidade.setText(itemVenda.getQuant());
+        viewHolder.txtProdRef.setText(itemVenda.getProduto().getReferencia());
+        viewHolder.txtProdQuantidade.setText(String.valueOf(itemVenda.getQuant()));
         viewHolder.txtProdValor.setText("R$ " + itemVenda.calcularValor());
 
         return view;
     }
 
     static class ViewHolder {
-        TextView txtProdNome, txtProdQuantidade, txtProdValor;
+        TextView txtProdNome, txtProdRef, txtProdQuantidade, txtProdValor;
     }
 
 }

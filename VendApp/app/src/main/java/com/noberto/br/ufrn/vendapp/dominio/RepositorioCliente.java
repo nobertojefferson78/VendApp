@@ -42,6 +42,20 @@ public class RepositorioCliente {
 
     }
 
+    private Cliente setComponentes(Cursor cursor){
+        Cliente cliente = new Cliente();
+        cliente.setId(cursor.getLong(cursor.getColumnIndex(Cliente.ID)));
+        cliente.setNome(cursor.getString(cursor.getColumnIndex(Cliente.NOME)));
+        cliente.setCpf(cursor.getString(cursor.getColumnIndex(Cliente.CPF)));
+        cliente.setTelefone(cursor.getString(cursor.getColumnIndex(Cliente.TELEFONE)));
+        cliente.setEmail(cursor.getString(cursor.getColumnIndex(Cliente.EMAIL)));
+        cliente.setDataNascimento(new Date(cursor.getLong(cursor.getColumnIndex(Cliente.DATANASCIMENTO))));
+        cliente.setSexo(cursor.getString(cursor.getColumnIndex(Cliente.SEXO)));
+        cliente.setPromocao(cursor.getString(cursor.getColumnIndex(Cliente.PROMOCAO)));
+
+        return cliente;
+    }
+
     public void excluir(long id)
     {
         connection.delete(Cliente.TABELA, " _id = ? ", new String[]{String.valueOf(id)});
@@ -63,37 +77,19 @@ public class RepositorioCliente {
 
     public ClienteArrayAdapter buscaClientes(Context context)
     {
-
         ClienteArrayAdapter adpContatos = new ClienteArrayAdapter(context, R.layout.lista_itens );
-
         Cursor cursor  =  connection.query(Cliente.TABELA, null, null, null, null, null, null);
 
         if (cursor.getCount() > 0 )
         {
-
             cursor.moveToFirst();
-
             do {
 
-                Cliente cliente = new Cliente();
-                cliente.setId(cursor.getLong(cursor.getColumnIndex(Cliente.ID)));
-                cliente.setNome(cursor.getString(cursor.getColumnIndex(Cliente.NOME)));
-                cliente.setCpf(cursor.getString(cursor.getColumnIndex(Cliente.CPF)));
-                cliente.setTelefone(cursor.getString(cursor.getColumnIndex(Cliente.TELEFONE)));
-                cliente.setEmail(cursor.getString(cursor.getColumnIndex(Cliente.EMAIL)));
-                cliente.setDataNascimento(new Date(cursor.getLong(cursor.getColumnIndex(Cliente.DATANASCIMENTO))));
-                cliente.setSexo(cursor.getString(cursor.getColumnIndex(Cliente.SEXO)));
-                cliente.setPromocao(cursor.getString(cursor.getColumnIndex(Cliente.PROMOCAO)));
-
-
+                Cliente cliente = setComponentes(cursor);
                 adpContatos.add(cliente);
-
             }while (cursor.moveToNext());
-
         }
-
         return adpContatos;
-
     }
 
     public Cliente buscarPorId(long id) {
@@ -103,16 +99,28 @@ public class RepositorioCliente {
         if(cursor.getCount()>0) {
             cursor.moveToNext();
             do{
-                Cliente cliente = new Cliente();
-                cliente.setId(cursor.getLong(cursor.getColumnIndex(Cliente.ID)));
-                cliente.setCpf(cursor.getString(cursor.getColumnIndex(Cliente.CPF)));
-                cliente.setNome(cursor.getString(cursor.getColumnIndex(Cliente.NOME)));
-                cliente.setEmail(cursor.getString(cursor.getColumnIndex(Cliente.EMAIL)));
-                cliente.setTelefone(cursor.getString(cursor.getColumnIndex(Cliente.TELEFONE)));
-                cliente.setSexo(cursor.getString(cursor.getColumnIndex(Cliente.SEXO)));
-                cliente.setDataNascimento(new Date(cursor.getLong(cursor.getColumnIndex(Cliente.DATANASCIMENTO))));
+                Cliente cliente = setComponentes(cursor);
 
                 if(cliente.getId() == id) {
+                    return cliente;
+                }
+
+            }while(cursor.moveToNext());
+        }
+
+        return null;
+    }
+
+    public Cliente buscarPorNome(String nome) {
+
+        Cursor cursor = connection.query(Cliente.TABELA, null, null, null, null, null, null);
+
+        if(cursor.getCount()>0) {
+            cursor.moveToNext();
+            do{
+                Cliente cliente = setComponentes(cursor);
+
+                if(cliente.getNome().equalsIgnoreCase(nome)) {
                     return cliente;
                 }
 
@@ -132,17 +140,29 @@ public class RepositorioCliente {
         if(cursor.getCount() > 0){
             do{
 
-                Cliente cliente = new Cliente();
-
-                cliente.setId(cursor.getLong(cursor.getColumnIndex(Cliente.ID)));
-                cliente.setCpf(cursor.getString(cursor.getColumnIndex(Cliente.CPF)));
-                cliente.setNome(cursor.getString(cursor.getColumnIndex(Cliente.NOME)));
-                cliente.setEmail(cursor.getString(cursor.getColumnIndex(Cliente.EMAIL)));
-                cliente.setTelefone(cursor.getString(cursor.getColumnIndex(Cliente.TELEFONE)));
-                cliente.setSexo(cursor.getString(cursor.getColumnIndex(Cliente.SEXO)));
-                cliente.setDataNascimento(new Date(cursor.getLong(cursor.getColumnIndex(Cliente.DATANASCIMENTO))));
+                Cliente cliente = setComponentes(cursor);
 
                 clientes.add(cliente);
+
+            }while (cursor.moveToNext());
+        }
+
+        return clientes;
+    }
+
+    public ArrayList<String> buscaNomesClientes(Context context){
+        ArrayList<String> clientes = new ArrayList<String>();
+
+        Cursor cursor = connection.query(Cliente.TABELA, null, null, null, null, null, null);
+
+        cursor.moveToFirst();
+
+        if(cursor.getCount() > 0){
+            do{
+
+                Cliente cliente = setComponentes(cursor);
+
+                clientes.add(cliente.getNome());
 
             }while (cursor.moveToNext());
         }

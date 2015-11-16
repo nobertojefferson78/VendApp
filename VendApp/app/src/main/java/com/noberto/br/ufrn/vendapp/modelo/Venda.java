@@ -21,7 +21,6 @@ public class Venda implements Serializable {
     private Cliente cliente;
     private ArrayList<Produto> produtos = new ArrayList<Produto>();
     private Date dataVenda;
-    private int quantidade;
     private double valorVenda;
 
     public Venda() {
@@ -34,15 +33,6 @@ public class Venda implements Serializable {
     }
     public void removeItemVenda(Produto produto) {
         this.getProdutos().remove(produto);
-    }
-
-    public double calcularValorTotal() {
-        int valor = 0;
-
-        for(Produto i: produtos) {
-            valor += (i.getValor()*this.getQuantidade());
-        }
-        return 0;
     }
 
     public void setId(long id) {
@@ -68,14 +58,6 @@ public class Venda implements Serializable {
     }
     public Date getDataVenda() {
         return this.dataVenda;
-    }
-
-    public int getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(int quantidade) {
-        this.quantidade = quantidade;
     }
 
     public double getValorVenda() {

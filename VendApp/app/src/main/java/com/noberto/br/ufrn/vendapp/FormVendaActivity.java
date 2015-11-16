@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.noberto.br.ufrn.vendapp.app.ItemVendaArrayAdapter;
 import com.noberto.br.ufrn.vendapp.app.MensageBox;
+import com.noberto.br.ufrn.vendapp.app.ProdutoArrayAdapter;
 import com.noberto.br.ufrn.vendapp.app.ViewHelper;
 import com.noberto.br.ufrn.vendapp.database.DataBase;
 import com.noberto.br.ufrn.vendapp.dominio.RepositorioCliente;
@@ -49,7 +50,7 @@ public class FormVendaActivity extends AppCompatActivity implements View.OnClick
     private EditText cpDataVenda, edtQuntidade;
     private TextView cpValorTotal;
     private Button btAdicionarProduto;
-    private AutoCompleteTextView autoTvProdutosVenda;
+    private AutoCompleteTextView autoTvProdutosVenda, autoEtCliente;
 
     private ListView lstItemVenda;
     private ArrayAdapter<ItemVenda> adpItemVendas;
@@ -57,6 +58,7 @@ public class FormVendaActivity extends AppCompatActivity implements View.OnClick
     private ArrayAdapter<String> adaptadorClienteVenda;
     private ArrayList<Cliente> clienteLista;
     private ArrayList<Produto> produtoLista;
+    private ArrayList<ItemVenda> itemVendasLista;
     private ArrayList<Produto> itensListaProdutos;
     private ArrayAdapter<String> getAdaptadorItemVenda;
     private ItemVendaArrayAdapter itemVendaArrayAdapter;
@@ -77,10 +79,9 @@ public class FormVendaActivity extends AppCompatActivity implements View.OnClick
     private Produto produto;
     private ItemVenda itemVenda;
     private Cliente cliente;
-    private int quantidadeTotal;
-    private double valorVenda;
-    private int quantidadePorProduto = 0;
-    private Regras regras;
+
+    //usada para saber o valor total da venda;
+    private double auxiliarPrecoVenda;
 
 
     @Override
@@ -102,11 +103,10 @@ public class FormVendaActivity extends AppCompatActivity implements View.OnClick
         itemVenda = new ItemVenda();
         cliente = new Cliente();
         itensListaProdutos = new ArrayList<Produto>();
-        regras = new Regras();
+        itemVendasLista = new ArrayList<ItemVenda>();
 
-        conectarBanco();
-
-        preencheSpinner();
+        this.conectarBanco();
+        this.preencheDados();
 
     }
 
@@ -118,14 +118,12 @@ public class FormVendaActivity extends AppCompatActivity implements View.OnClick
         ab.setIcon(R.mipmap.ic_launcher);
         ab.setDisplayShowHomeEnabled(true);
 
-        spnCliente = (Spinner)findViewById(R.id.cpCompleteCliente);
-        spnProdutos = (Spinner)findViewById(R.id.spnItenSelecionado);
         lstItemVenda = (ListView)findViewById(R.id.lstItemVenda);
         btAdicionarProduto = (Button)findViewById(R.id.btAdicionarProduto);
         edtQuntidade = (EditText)findViewById(R.id.edtQuantidade);
         cpValorTotal = (TextView)findViewById(R.id.cpValorTotal);
         autoTvProdutosVenda = (AutoCompleteTextView)findViewById(R.id.autoTvProdutosVenda);
-
+        autoEtCliente = (AutoCompleteTextView)findViewById(R.id.autoEtCliente);
 
         btAdicionarProduto.setOnClickListener(this);
         lstItemVenda.setOnItemClickListener(this);
@@ -146,55 +144,45 @@ public class FormVendaActivity extends AppCompatActivity implements View.OnClick
             repositorioCliente = new RepositorioCliente(conn);
             repositorioProduto = new RepositorioProduto(conn);
 
-            adaptadorClienteVenda = ViewHelper.createArrayAdapter(this, spnCliente);
-            getAdaptadorItemVenda = ViewHelper.createArrayAdapter(this, spnProdutos);
-
+            //inicializando a lista de itensvenda
+            adpItemVendas = new ItemVendaArrayAdapter(this, R.layout.lista_itens_itens);
 
         }catch (SQLException ex){
             MensageBox.show(this, "Erro no banco: " + ex.getMessage(), "ERRO!");
         }
     }
 
-    public void preencheSpinner(){
+    public void preencheDados(){
         clienteLista = repositorioCliente.buscaListaClientes(this);
-
-        for(int i = 0; i < clienteLista.size(); i++){
-            Cliente cliente = clienteLista.get(i);
-            adaptadorClienteVenda.add(cliente.getNome());
-        }
-
         produtoLista = repositorioProduto.buscaListaProdutos(this);
 
-        for (int i = 0; i < produtoLista.size(); i++){
-            Produto produto = produtoLista.get(i);
-            getAdaptadorItemVenda.add(produto.getNome());
-        }
 
         ArrayList<String> nomesProdutos = repositorioProduto.buscaNomesProdutos(this);
+        ArrayList<String> nomesClientes = repositorioCliente.buscaNomesClientes(this);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, nomesProdutos);
+        ArrayAdapter<String> adapterCliente = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, nomesClientes);
 
+        autoEtCliente.setAdapter(adapterCliente);
         autoTvProdutosVenda.setAdapter(adapter);
 
     }
 
     public void salvar(){
-
-        venda.setCliente(clienteLista.get(spnCliente.getSelectedItemPosition()));
-        venda.setProdutos(itensListaProdutos);
-
-        itemVenda.setVenda(this.venda);
-
-        for(Produto p : itensListaProdutos){
-            itemVenda.setProduto(p);
-            venda.setValorVenda(p.getValor());
-            //neste caso altero apenas a informação da quantidade de estoque para dizer quantos itens eu vendi
-            itemVenda.setQuant(regras.getProduto().getEstoque());
-
-            repositorioItemVenda.inserir(itemVenda);
-        }
-
+        //salve o cliente boy, lembre de pegar la do campo edo repositorio buscando pelo nome viu?
+        cliente = repositorioCliente.buscarPorNome(autoEtCliente.getText().toString());
+        venda.setCliente(cliente);
+        venda.setValorVenda(auxiliarPrecoVenda);
+        //aqui ja coloco o id correto pegando o id do ultimo produto inserido e depois adicionando +1 para poder salvar
         repositorioVenda.inserir(venda);
+        //depois de salvar recupero a venda salva para pegar o id da venda realizada
+        venda = repositorioVenda.pegarUltimaVendaPorCliente(cliente.getNome());
+
+        //aqui salvo minha lista de itens com id da venda ja salva
+        for(ItemVenda v : itemVendasLista){
+            v.setVenda(venda);
+            repositorioItemVenda.inserir(v);
+        }
 
         finish();
     }
@@ -212,35 +200,54 @@ public class FormVendaActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onClick(View v) {
-        //pegando o id do produto selecionado do spinner
-        long id = spnProdutos.getSelectedItemId();
-
-        //criei uma classe chamada regra para separar regras de negocio
-
-
-        //quantidade alterada na regra de negocio para validar, esse pega la do campo de texto
-        regras.setQuantidade(Integer.parseInt(edtQuntidade.getText().toString()));
+        produto = repositorioProduto.buscarPorNome(autoTvProdutosVenda.getText().toString());
+        itemVenda = new ItemVenda();
+        adpProdutos = new ProdutoArrayAdapter(this, R.layout.lista_itens_produto);
 
 
-        regras.setProduto(produtoLista.get((int) id));
+        int quantidade = Integer.parseInt(edtQuntidade.getText().toString());
 
-        if(regras.produtoNoEstoque()) {
-
-            //aqui tenho que guardar a quantidade por produto dentro da regra para salvar no itenVenda
-            regras.getProduto().setEstoque(regras.getQuantidade());
-
-            //usado para armazenar apenas os itens escolhidos
-            itensListaProdutos.add(produtoLista.get((int) id));
-
-            String auxiliar = Integer.toString(regras.calcularValorProdutoQuantidade());
-
-            cpValorTotal.setText(auxiliar);
-
-            //armazenando o valor total da venda;
-            valorVenda += regras.calcularValorProdutoQuantidade();
-            adpProdutos = repositorioProduto.buscarProdutoNome(this, regras.getProduto().getNome());
-            lstItemVenda.setAdapter(adpProdutos);
+        if (produto != null && produto.getEstoque() >= quantidade){
+            itensListaProdutos.add(produto);
+            itemVenda.setProduto(produto);
+            itemVenda.setQuant(quantidade);
+            adpItemVendas.add(itemVenda);
+            lstItemVenda.setAdapter(adpItemVendas);
+            //armazenar todos os itens da venda
+            itemVendasLista.add(itemVenda);
+            auxiliarPrecoVenda = calcularPreco(itemVenda);
         }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(conn != null){
+            conn.close();
+        }
+    }
+
+    public double calcularPreco(ItemVenda itemVenda){
+        String aux = cpValorTotal.getText().toString();
+        double valorTotal;
+
+        if(aux.equalsIgnoreCase("Valor")){
+            valorTotal = itemVenda.calcularValor();
+
+            cpValorTotal.setText(String.valueOf(valorTotal));
+            return valorTotal;
+        }else{
+            double valorAnterior = Double.valueOf(aux);
+            valorTotal = itemVenda.calcularValor();
+
+            valorTotal += valorAnterior;
+
+            cpValorTotal.setText(String.valueOf(valorTotal));
+            return valorTotal;
+        }
+
+
     }
 
     @Override
