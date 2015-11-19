@@ -123,19 +123,6 @@
         android:layout_gravity="center_horizontal"
         android:gravity="bottom|center_horizontal">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="SALVAR"
-            android:id="@+id/btSalvarCliente"
-            android:drawableLeft="@android:drawable/ic_input_add"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CANCELAR"
-            android:id="@+id/btCancelarCliente"
-            android:drawableLeft="@android:drawable/ic_delete"/>
     </LinearLayout>
 
 </LinearLayout>

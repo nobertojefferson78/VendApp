@@ -7,7 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.noberto.br.ufrn.vendapp.R;
 import com.noberto.br.ufrn.vendapp.app.ProdutoArrayAdapter;
+import com.noberto.br.ufrn.vendapp.modelo.Cliente;
 import com.noberto.br.ufrn.vendapp.modelo.Produto;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by André on 15/10/2015.
@@ -49,23 +53,127 @@ public class RepositorioProduto {
     public void excluir(long id) {
         connection.delete(Produto.TABELA, " _id = ? ", new String[]{String.valueOf(id)});
     }
+
+    public Produto setComponentes(Cursor cursor){
+
+        Produto produto = new Produto();
+        produto.setId(cursor.getLong(cursor.getColumnIndex(Produto.ID)));
+        produto.setReferencia(cursor.getString(cursor.getColumnIndex(Produto.REFERENCIA)));
+        produto.setNome(cursor.getString(cursor.getColumnIndex(Produto.NOME)));
+        produto.setValor(cursor.getDouble(cursor.getColumnIndex(Produto.VALOR)));
+        produto.setEstoque(cursor.getInt(cursor.getColumnIndex(Produto.ESTOQUE)));
+
+        return produto;
+    }
+
     public ProdutoArrayAdapter buscarProdutos(Context context) {
-        ProdutoArrayAdapter produtoArrayAdapter = new ProdutoArrayAdapter(context, R.layout.lista_itens);
+        ProdutoArrayAdapter produtoArrayAdapter = new ProdutoArrayAdapter(context, R.layout.lista_itens_produto);
         Cursor cursor = connection.query(Produto.TABELA, null, null, null, null, null, null);
 
         if(cursor.getCount()>0) {
             cursor.moveToFirst();
             do{
-                Produto produto = new Produto();
-                produto.setId(cursor.getLong(cursor.getColumnIndex(Produto.ID)));
-                produto.setReferencia(cursor.getString(cursor.getColumnIndex(Produto.REFERENCIA)));
-                produto.setNome(cursor.getString(cursor.getColumnIndex(Produto.NOME)));
-                produto.setValor(cursor.getDouble(cursor.getColumnIndex(Produto.VALOR)));
-                produto.setEstoque(cursor.getInt(cursor.getColumnIndex(Produto.ESTOQUE)));
+                Produto produto = setComponentes(cursor);
 
                 produtoArrayAdapter.add(produto);
             }while(cursor.moveToNext());
         }
         return produtoArrayAdapter;
+    }
+
+    public ProdutoArrayAdapter buscarProdutoNome(Context context, String nome) {
+        ProdutoArrayAdapter produtoArrayAdapter = new ProdutoArrayAdapter(context, R.layout.lista_itens_produto);
+        Cursor cursor = connection.query(Produto.TABELA, null, null, null, null, null, null);
+
+        if(cursor.getCount()>0) {
+            cursor.moveToFirst();
+            do{
+                Produto produto = setComponentes(cursor);
+
+                if(produto.getNome().equalsIgnoreCase(nome)) {
+                    produtoArrayAdapter.add(produto);
+                }
+            }while(cursor.moveToNext());
+        }
+        return produtoArrayAdapter;
+    }
+
+
+    public Produto buscarPorId(long id) {
+
+        Cursor cursor = connection.query(Produto.TABELA, null, null, null, null, null, null);
+
+        if(cursor.getCount()>0) {
+            cursor.moveToNext();
+            do{
+                Produto produto = setComponentes(cursor);
+
+                if(produto.getId() == id) {
+                    return produto;
+                }
+
+            }while(cursor.moveToNext());
+        }
+
+        return null;
+    }
+
+    public Produto buscarPorNome(String nome) {
+
+        Cursor cursor = connection.query(Produto.TABELA, null, null, null, null, null, null);
+
+        if(cursor.getCount()>0) {
+            cursor.moveToNext();
+            do{
+                Produto produto = setComponentes(cursor);
+
+                if(produto.getNome().equalsIgnoreCase(nome)) {
+                    return produto;
+                }
+
+            }while(cursor.moveToNext());
+        }
+
+        return null;
+    }
+
+    public ArrayList<Produto> buscaListaProdutos(Context context){
+        ArrayList<Produto> produtos = new ArrayList<Produto>();
+
+        Cursor cursor = connection.query(Produto.TABELA, null, null, null, null, null, null);
+
+        cursor.moveToFirst();
+
+        if(cursor.getCount() > 0){
+            do{
+
+                Produto produto = setComponentes(cursor);
+                produtos.add(produto);
+
+            }while (cursor.moveToNext());
+        }
+
+        return produtos;
+    }
+
+    public ArrayList<String> buscaNomesProdutos(Context context){
+        ArrayList<String> produtos = new ArrayList<String>();
+
+        Cursor cursor = connection.query(Produto.TABELA, null, null, null, null, null, null);
+
+        cursor.moveToFirst();
+
+
+        if(cursor.getCount() > 0){
+            Produto produto;
+            do{
+                produto = setComponentes(cursor);
+
+                produtos.add(produto.getNome());
+
+            }while (cursor.moveToNext());
+        }
+
+        return produtos;
     }
 }

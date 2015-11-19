@@ -8,18 +8,18 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.noberto.br.ufrn.vendapp.R;
-import com.noberto.br.ufrn.vendapp.modelo.Produto;
+import com.noberto.br.ufrn.vendapp.modelo.ItemVenda;
 
 /**
- * Created by André on 15/10/2015.
+ * Created by André on 16/10/2015.
  */
-public class ProdutoArrayAdapter extends ArrayAdapter<Produto> {
+public class ItemVendaArrayAdapter extends ArrayAdapter<ItemVenda> {
 
     private int resource = 0;
     private LayoutInflater inflater;
     private Context context;
 
-    public ProdutoArrayAdapter(Context context, int resource) {
+    public ItemVendaArrayAdapter(Context context, int resource) {
         super(context, resource);
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.resource = resource;
@@ -27,40 +27,43 @@ public class ProdutoArrayAdapter extends ArrayAdapter<Produto> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent)
+    {
+
         View view = null;
         ViewHolder viewHolder = null;
 
-        if(convertView == null) {
+        if (convertView == null) {
             viewHolder = new ViewHolder();
 
             view = inflater.inflate(resource, parent, false);
 
             viewHolder.txtProdNome = (TextView)view.findViewById(R.id.txtProdNome);
-            viewHolder.txtProdReferencia = (TextView)view.findViewById(R.id.txtProdReferencia);
-            viewHolder.txtProdValor = (TextView)view.findViewById(R.id.txtProdValor);
-            viewHolder.txtProdQuantidade = (TextView)view.findViewById(R.id.txtProdQuantidade);
-
+            viewHolder.txtProdRef = (TextView)view.findViewById(R.id.txtProdRef);
+            viewHolder.txtProdQuantidade = (TextView)view.findViewById(R.id.txtQuantidadeItem);
+            viewHolder.txtProdValor = (TextView)view.findViewById(R.id.txtProdValorItem);
 
             view.setTag(viewHolder);
 
             convertView = view;
+
         }else {
             viewHolder = (ViewHolder)convertView.getTag();
             view = convertView;
         }
 
-        Produto produto = getItem(position);
+        ItemVenda itemVenda = getItem(position);
 
-        viewHolder.txtProdNome.setText(produto.getNome());
-        viewHolder.txtProdReferencia.setText(produto.getReferencia());
-        viewHolder.txtProdValor.setText("R$ "+produto.getValor()+"");
-        viewHolder.txtProdQuantidade.setText(""+produto.getEstoque());
+        viewHolder.txtProdNome.setText(itemVenda.getProduto().getNome());
+        viewHolder.txtProdRef.setText(itemVenda.getProduto().getReferencia());
+        viewHolder.txtProdQuantidade.setText(String.valueOf(itemVenda.getQuant()));
+        viewHolder.txtProdValor.setText("R$ " + itemVenda.calcularValor());
 
         return view;
     }
 
     static class ViewHolder {
-        TextView txtProdCor, txtProdNome, txtProdReferencia, txtProdValor, txtProdQuantidade;
+        TextView txtProdNome, txtProdRef, txtProdQuantidade, txtProdValor;
     }
+
 }

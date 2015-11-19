@@ -7,11 +7,13 @@
     android:layout_alignParentTop="true"
     android:layout_alignParentStart="true">
 
-    <EditText
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/cpPesquisarProdutos"
-        android:hint="Pesquisar..." />
+        android:weightSum="1">
+
+    </LinearLayout>
 
     <ListView
         android:layout_width="match_parent"

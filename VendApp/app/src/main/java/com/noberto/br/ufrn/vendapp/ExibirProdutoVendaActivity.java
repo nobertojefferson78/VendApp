@@ -25,35 +25,34 @@ import com.noberto.br.ufrn.vendapp.dominio.RepositorioProduto;
 import com.noberto.br.ufrn.vendapp.modelo.Cliente;
 import com.noberto.br.ufrn.vendapp.modelo.Produto;
 
-public class ExibirProdutosActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, MenuItem.OnMenuItemClickListener {
+public class ExibirProdutoVendaActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, MenuItem.OnMenuItemClickListener {
 
     public static final String PAR_PRODUTO = "PRODUTO";
 
-    //private EditText edtPesquisa;
+
     private ListView lstProdutos;
     private ArrayAdapter<Produto> adpProdutos;
     private DataBase dataBase;
     private SQLiteDatabase connection;
     private RepositorioProduto repositorioProduto;
     private ActionBar ab;
-    private MenuItem m1, m2;
+    private MenuItem m1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exibir_produtos);
 
-
+        //  edtPesquisa = (EditText) findViewById(R.id.cpPesquisarProdutos);
         lstProdutos = (ListView) findViewById(R.id.lstProduto);
 
         lstProdutos.setOnItemClickListener(this);
 
         ab = getSupportActionBar();
         ab.setTitle("Produtos");
-        ab.setSubtitle("Lista");
-        ab.setBackgroundDrawable(getResources().getDrawable(R.color.blue));
-        ab.setIcon(R.mipmap.ic_launcher);
-        ab.setDisplayShowHomeEnabled(true);
+        ab.setSubtitle("lista");
+        ab.setBackgroundDrawable(getResources().getDrawable(R.color.actionbar));
+
     }
     @Override
     protected void onDestroy() {
@@ -61,6 +60,8 @@ public class ExibirProdutosActivity extends AppCompatActivity implements Adapter
         if (connection != null){
             connection.close();
         }
+
+
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -90,7 +91,7 @@ public class ExibirProdutosActivity extends AppCompatActivity implements Adapter
     }
 
     public void editarProduto(View view, Produto produto) {
-        Intent it = new Intent(this, FormProdutoActivity.class);
+        Intent it = new Intent(this, FormVendaActivity.class);
         it.putExtra(PAR_PRODUTO, produto);
         startActivityForResult(it, 0);
     }
@@ -113,12 +114,6 @@ public class ExibirProdutosActivity extends AppCompatActivity implements Adapter
         m1.setActionView(sv);
         m1.setIcon(R.drawable.abc_ic_search_api_mtrl_alpha);
 
-        m2 = menu.add(0, 0, 0, "Adicionar");
-        m2.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        m2.setIcon(R.drawable.adicionarr);
-        m2.setOnMenuItemClickListener(this);
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_exibir_produtos, menu);
         return true;
     }
 

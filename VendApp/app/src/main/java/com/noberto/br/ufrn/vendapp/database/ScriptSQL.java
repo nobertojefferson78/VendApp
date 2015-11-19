@@ -37,4 +37,33 @@ public class ScriptSQL {
         return sqlBuilder.toString();
     }
 
+    public static String getCreateItemVenda() {
+        StringBuilder sqlBuilder = new StringBuilder();
+
+        sqlBuilder.append("CREATE TABLE IF NOT EXISTS ITEM_VENDA (");
+        sqlBuilder.append("_id INTEGER NOT NULL");
+        sqlBuilder.append(" PRIMARY KEY AUTOINCREMENT,");
+        sqlBuilder.append("_id_PRODUTO INTEGER NOT NULL,");
+        sqlBuilder.append("_id_VENDA INTERGER NOT NULL,");
+        sqlBuilder.append("QUANTIDADE INTEGER NOT NULL");
+        sqlBuilder.append(");");
+
+        return sqlBuilder.toString();
+    }
+
+    public static String getCreateVenda() {
+        StringBuilder sqlBuilder = new StringBuilder();
+
+        sqlBuilder.append("CREATE TABLE IF NOT EXISTS VENDA (");
+        sqlBuilder.append("_id INTEGER NOT NULL");
+        sqlBuilder.append(" PRIMARY KEY AUTOINCREMENT,");
+        sqlBuilder.append("_id_CLIENTE INTEGER NOT NULL,");
+        //procure para inserir double em sql
+        sqlBuilder.append("VALORVENDA DOUBLE(9,2),");
+        sqlBuilder.append("DATA DATE NOT NULL");
+        sqlBuilder.append(");");
+
+        return sqlBuilder.toString();
+    }
+
 }

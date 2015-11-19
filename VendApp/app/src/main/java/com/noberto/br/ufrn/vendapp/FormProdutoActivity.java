@@ -2,6 +2,7 @@ package com.noberto.br.ufrn.vendapp;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,7 +17,7 @@ import com.noberto.br.ufrn.vendapp.dominio.RepositorioProduto;
 import com.noberto.br.ufrn.vendapp.modelo.Produto;
 
 
-public class FormProdutoActivity extends AppCompatActivity {
+public class FormProdutoActivity extends AppCompatActivity implements MenuItem.OnMenuItemClickListener {
 
     private EditText cpProdReferencia, cpProdNome, cpProdValor, cpProdEstoque;
     private Button btSalvarProduto, btCancelarProduto;
@@ -25,15 +26,27 @@ public class FormProdutoActivity extends AppCompatActivity {
     private RepositorioProduto repositorioProduto;
     private Produto produto;
 
+    private ActionBar ab;
+    private MenuItem m1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_produto);
+        ab = getSupportActionBar();
+        ab.setTitle("Produtos");
+        ab.setSubtitle("Cadastrar");
+        ab.setBackgroundDrawable(getResources().getDrawable(R.color.blue));
+        ab.setIcon(R.mipmap.ic_launcher);
+        ab.setDisplayShowHomeEnabled(true);
+
+
         conectarInterface();
         Bundle bundle = getIntent().getExtras();
         if((bundle != null) && (bundle.containsKey(ExibirProdutosActivity.PAR_PRODUTO))){
 
             this.produto = (Produto)bundle.getSerializable(ExibirProdutosActivity.PAR_PRODUTO);
+            ab.setSubtitle("Editar");
             preencheDados();
 
         }else  produto = new Produto();
@@ -54,28 +67,37 @@ public class FormProdutoActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        m1 = menu.add(0, 0, 0, "Salvar");
+        m1.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        m1.setOnMenuItemClickListener(this);
+
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_exibir_produtos, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     public void conectarInterface() {
         cpProdReferencia = (EditText) findViewById(R.id.cpProdReferencia);
         cpProdNome = (EditText) findViewById(R.id.cpProdNome);
         cpProdValor = (EditText) findViewById(R.id.cpProdValor);
         cpProdEstoque = (EditText) findViewById(R.id.cpProdEstoque);
 
-        btSalvarProduto = (Button) findViewById(R.id.btSalvarProduto);
-        btSalvarProduto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                salvar();
-                finish();
-            }
-        });
 
-        btCancelarProduto = (Button) findViewById(R.id.btCancelarProduto);
-        btCancelarProduto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO
-            }
-        });
     }
     public void preencheDados(){
         cpProdReferencia.setText(this.produto.getReferencia());
@@ -95,9 +117,17 @@ public class FormProdutoActivity extends AppCompatActivity {
             }else{
                 repositorioProduto.alterar(produto);
             }
-            MensageBox.show(this,"Estou salvando o condenado: " + produto.getNome(), "Perfeito");
+
         } catch(Exception e) {
             MensageBox.show(this, "Erro ao inserir produto: " + e.getMessage(), "ERRO!");
         }
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        salvar();
+        MensageBox.show(this, "O produto: " + produto.getNome() + " foi salvo", "Perfeito");
+        this.finish();
+        return false;
     }
 }
