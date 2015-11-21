@@ -91,6 +91,24 @@ public class RepositorioCliente {
         }
         return adpContatos;
     }
+    // teste de busca por assiduidade
+    public ClienteArrayAdapter buscaClientesAssiduos(Context context)
+    {
+        ClienteArrayAdapter adpContatos = new ClienteArrayAdapter(context, R.layout.lista_itens );
+        Cursor cursor  =  connection.rawQuery("SELECT * FROM CLIENTE as c, (SELECT _id_CLIENTE, COUNT(_id_CLIENTE) as count FROM VENDA ORDER BY count DESC) as v\n" +
+                "WHERE c._id = v._id_CLIENTE;", null);
+
+        if (cursor.getCount() > 0 )
+        {
+            cursor.moveToFirst();
+            do {
+
+                Cliente cliente = setComponentes(cursor);
+                adpContatos.add(cliente);
+            }while (cursor.moveToNext());
+        }
+        return adpContatos;
+    }
 
     public Cliente buscarPorId(long id) {
 
