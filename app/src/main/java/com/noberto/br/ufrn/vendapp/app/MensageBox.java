@@ -2,6 +2,7 @@ package com.noberto.br.ufrn.vendapp.app;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 
 /**
  * Created by jefferson on 25/06/2015.
@@ -24,4 +25,5 @@ public class MensageBox {
         dlg.setTitle(title);
         dlg.show();
     }
+
 }

@@ -228,7 +228,12 @@ public class FormVendaActivity extends AppCompatActivity implements View.OnClick
             //armazenar todos os itens da venda
             itemVendasLista.add(itemVenda);
             auxiliarPrecoVenda = calcularPreco(itemVenda);
+        }else{
+            MensageBox.show(this, "Erro", "A quantidade excede o estoque atual: " + produto.getEstoque());
         }
+
+        autoTvProdutosVenda.setText("");
+        edtQuntidade.setText("");
 
     }
 

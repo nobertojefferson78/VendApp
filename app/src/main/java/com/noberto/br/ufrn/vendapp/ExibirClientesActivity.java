@@ -10,9 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ActionMenuView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -27,6 +29,7 @@ import com.noberto.br.ufrn.vendapp.modelo.Cliente;
 public class ExibirClientesActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, MenuItem.OnMenuItemClickListener {
 
 
+    private static final int PICK_CONTACT_REQUEST = 0;
     private ListView lstClientes;
     private ArrayAdapter<Cliente> adpClientes;
 
@@ -34,7 +37,7 @@ public class ExibirClientesActivity extends AppCompatActivity implements Adapter
     private SQLiteDatabase conn;
     private RepositorioCliente repositorioCliente;
     private ActionBar ab;
-    private MenuItem m1, m2;
+    private MenuItem m1, m2, editar, apagar;
 
     public static final String PAR_CLIENTE = "CLIENTE";
 
@@ -45,7 +48,7 @@ public class ExibirClientesActivity extends AppCompatActivity implements Adapter
 
 
         lstClientes  = (ListView)findViewById(R.id.lstCliente);
-
+        registerForContextMenu(lstClientes);
         lstClientes.setOnItemClickListener(this);
 
         ab = getSupportActionBar();
@@ -88,16 +91,61 @@ public class ExibirClientesActivity extends AppCompatActivity implements Adapter
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-       atualizarLista();
+    public void onCreateContextMenu (ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+        final Cliente cliente = adpClientes.getItem(info.position);
+
+        editar = menu.add("Editar");
+        apagar = menu.add("Apagar");
+
+        editar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                //ExibirVendasActivity.this.someFunctionInYourActivity();
+                editarCliente(cliente);
+
+                return true;
+            }
+        });
+        apagar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                //ExibirVendasActivity.this.someFunctionInYourActivity();
+                excluir(cliente);
+
+                return true;
+            }
+        });;
+    }
+
+    public void excluir(final Cliente cliente1){
+        new AlertDialog.Builder(this).setMessage("Excluir " + cliente1.getNome() + "?").setCancelable(true)
+                .setNegativeButton("Sim", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        excluirCliente(cliente1);
+                    }
+
+                })
+                .setPositiveButton("Não", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+
+                })
+                .show();
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
 
         final Cliente cliente = adpClientes.getItem(position);
-
-        new AlertDialog.Builder(this).setMessage(R.string.mensagem_pergunta_editar).setCancelable(true)
+        /*new AlertDialog.Builder(this).setMessage(R.string.mensagem_pergunta_editar).setCancelable(true)
                 .setNegativeButton(getString(R.string.mensagem_editar), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -109,16 +157,15 @@ public class ExibirClientesActivity extends AppCompatActivity implements Adapter
                 .setPositiveButton(getString(R.string.mensagem_excluir), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         excluirCliente(cliente);
                     }
 
                 })
-                .show();
+                .show();*/
 
     }
 
-    public void editarCliente(View view, Cliente cliente){
+    public void editarCliente(Cliente cliente){
         Intent it = new Intent(this, FormClienteActivity.class);
 
         it.putExtra(PAR_CLIENTE, cliente);
@@ -178,6 +225,21 @@ public class ExibirClientesActivity extends AppCompatActivity implements Adapter
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == PICK_CONTACT_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                // The user picked a contact.
+                // The Intent's data Uri identifies which contact was selected.
+
+                // Do something with the contact here (bigger example below)
+            }
+        }
+
+        atualizarLista();
+    }
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         Intent it = new Intent(this, FormClienteActivity.class);

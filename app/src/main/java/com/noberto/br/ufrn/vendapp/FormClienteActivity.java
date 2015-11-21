@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SearchView;
 
+import com.noberto.br.ufrn.vendapp.app.Mask;
 import com.noberto.br.ufrn.vendapp.app.MensageBox;
 import com.noberto.br.ufrn.vendapp.database.DataBase;
 import com.noberto.br.ufrn.vendapp.dominio.RepositorioCliente;
@@ -89,7 +91,9 @@ public class FormClienteActivity extends AppCompatActivity implements MenuItem.O
 
         cpNome = (EditText) findViewById(R.id.cpNome);
         cpCpf = (EditText) findViewById(R.id.cpCpf);
+        cpCpf.addTextChangedListener(Mask.insert("###.###.###-##", cpCpf));
         cpTelefone = (EditText) findViewById(R.id.cpTelefone);
+        cpTelefone.addTextChangedListener(Mask.insert("(##)#####-####",cpTelefone));
         cpEmail = (EditText) findViewById(R.id.cpEmail);
         cpNascimento = (EditText) findViewById(R.id.cpNascimento);
         rbFeminio = (RadioButton) findViewById(R.id.rbFeminino);
@@ -99,6 +103,39 @@ public class FormClienteActivity extends AppCompatActivity implements MenuItem.O
         ExibeDataListener edl = new ExibeDataListener();
         cpNascimento.setOnClickListener(edl);
         cpNascimento.setKeyListener(null);
+    }
+
+    private boolean validarCampo(){
+        if(TextUtils.isEmpty(cpNome.getText().toString()) ){
+            MensageBox.show(this, "Erro", "O campo nome está vazio");
+            return false;
+        }
+        if(TextUtils.isEmpty(cpCpf.getText().toString())){
+            MensageBox.show(this, "Erro", "O campo cpf está vazio");
+            return false;
+        }
+        if(TextUtils.isEmpty(cpTelefone.getText().toString())){
+            MensageBox.show(this, "Erro", "O campo telefone está vazio");
+            return false;
+        }
+        if(TextUtils.isEmpty(cpEmail.getText().toString())){
+            MensageBox.show(this, "Erro", "O campo email está vazio");
+            return false;
+        }
+        if(TextUtils.isEmpty(cpNascimento.getText().toString())){
+            MensageBox.show(this, "Erro", "O campo Data de nascimento está vazio");
+            return false;
+        }
+        if(cpCpf.getText().length() < 14){
+            MensageBox.show(this, "Erro", "O campo cpf está errado");
+            return false;
+        }
+        if(cpTelefone.getText().length() < 14){
+            MensageBox.show(this, "Erro", "O campo telefone está errado");
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -130,29 +167,34 @@ public class FormClienteActivity extends AppCompatActivity implements MenuItem.O
 
     }
 
-    public void salvar(){
-        try {
+    public void salvar() {
+        if (validarCampo()){
+            try {
+                cliente.setNome(cpNome.getText().toString());
+                cliente.setCpf(cpCpf.getText().toString());
+                cliente.setTelefone(cpTelefone.getText().toString());
+                cliente.setEmail(cpEmail.getText().toString());
+                if (rbFeminio.isChecked()) {
+                    cliente.setSexo("Feminino");
+                } else {
+                    cliente.setSexo("Masculino");
+                }
+
+                if (cliente.getId() == 0) {
+                    rpCliente.inserir(cliente);
+                } else {
+                    rpCliente.alterar(cliente);
+                }
+
+                MensageBox.show(this, "Perfeito", "O cliente" + cliente.getNome() + "foi salvo!");
 
 
-            cliente.setNome(cpNome.getText().toString());
-            cliente.setCpf(cpCpf.getText().toString());
-            cliente.setTelefone(cpTelefone.getText().toString());
-            cliente.setEmail(cpEmail.getText().toString());
-            if(rbFeminio.isChecked()){
-                cliente.setSexo("Feminino");
-            }else{
-                cliente.setSexo("Masculino");
+            } catch (Exception ex) {
+                MensageBox.show(this, "Erro ao inserir cliente: " + ex.getMessage(), "ERRO!");
             }
+            finish();
 
-            if(cliente.getId() == 0) {
-                rpCliente.inserir(cliente);
-            }else{
-                rpCliente.alterar(cliente);
-            }
 
-            MensageBox.show(this,"O cliente: " + cliente.getNome() + " foi salvo", "Perfeito");
-        }catch (Exception ex){
-            MensageBox.show(this, "Erro ao inserir cliente: " + ex.getMessage(), "ERRO!");
         }
     }
 
@@ -194,8 +236,6 @@ public class FormClienteActivity extends AppCompatActivity implements MenuItem.O
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         salvar();
-        finish();
-
         return false;
     }
 

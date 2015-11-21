@@ -5,12 +5,14 @@ import android.database.sqlite.SQLiteException;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.noberto.br.ufrn.vendapp.app.Mask;
 import com.noberto.br.ufrn.vendapp.app.MensageBox;
 import com.noberto.br.ufrn.vendapp.database.DataBase;
 import com.noberto.br.ufrn.vendapp.dominio.RepositorioProduto;
@@ -102,32 +104,59 @@ public class FormProdutoActivity extends AppCompatActivity implements MenuItem.O
     public void preencheDados(){
         cpProdReferencia.setText(this.produto.getReferencia());
         cpProdNome.setText(this.produto.getNome());
-        cpProdValor.setText(this.produto.getValor()+"");
+        cpProdValor.setText(this.produto.getValor() + "");
         cpProdEstoque.setText(this.produto.getEstoque()+"");
     }
+
+    private boolean validarCampos(){
+
+        if(TextUtils.isEmpty(cpProdReferencia.getText().toString())){
+            MensageBox.show(this, "Erro", "Campo Referencia vazio");
+            return false;
+        }
+
+        if(TextUtils.isEmpty(cpProdNome.getText().toString())) {
+            MensageBox.show(this, "Erro", "Campo nome vazio");
+            return false;
+        }
+
+        if (TextUtils.isEmpty(cpProdEstoque.getText().toString())) {
+            MensageBox.show(this, "Erro", "Campo Estoque vazio");
+            return false;
+        }
+
+        if (TextUtils.isEmpty(cpProdValor.getText().toString())) {
+            MensageBox.show(this, "Erro", "Campo Valor vazio");
+            return false;
+        }
+
+        return true;
+    }
+
     public void salvar() {
-        try {
-            produto.setReferencia(cpProdReferencia.getText().toString());
-            produto.setNome(cpProdNome.getText().toString());
-            produto.setValor(Double.parseDouble(cpProdValor.getText().toString()));
-            produto.setEstoque(Integer.parseInt(cpProdEstoque.getText().toString()));
+        if(validarCampos()) {
+            try {
+                produto.setReferencia(cpProdReferencia.getText().toString());
+                produto.setNome(cpProdNome.getText().toString());
+                produto.setValor(Double.parseDouble(cpProdValor.getText().toString()));
+                produto.setEstoque(Integer.parseInt(cpProdEstoque.getText().toString()));
 
-            if(produto.getId() == 0) {
-                repositorioProduto.inserir(produto);
-            }else{
-                repositorioProduto.alterar(produto);
+                if (produto.getId() == 0) {
+                    repositorioProduto.inserir(produto);
+                } else {
+                    repositorioProduto.alterar(produto);
+                }
+
+            } catch (Exception e) {
+                MensageBox.show(this, "Erro ao inserir produto: " + e.getMessage(), "ERRO!");
             }
-
-        } catch(Exception e) {
-            MensageBox.show(this, "Erro ao inserir produto: " + e.getMessage(), "ERRO!");
+            this.finish();
         }
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         salvar();
-        MensageBox.show(this, "O produto: " + produto.getNome() + " foi salvo", "Perfeito");
-        this.finish();
         return false;
     }
 }
