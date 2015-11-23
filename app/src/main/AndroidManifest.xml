@@ -45,6 +45,10 @@
         </activity>
         <activity android:name=".ExibirProdutoVendaActivity" >
         </activity>
+        <activity
+            android:name=".UpdateProdutoActivity"
+            android:label="@string/title_activity_update_produto" >
+        </activity>
     </application>
 
 </manifest>

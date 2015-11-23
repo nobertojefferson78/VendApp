@@ -28,4 +28,5 @@
     <string name="title_activity_exibir_produtos">ExibirProdutosActivity</string>
     <string name="title_activity_form_venda">FormVendaActivity</string>
     <string name="title_activity_exibir_vendas">ExibirVendasActivity</string>
+    <string name="title_activity_update_produto">UpdateProdutoActivity</string>
 </resources>
