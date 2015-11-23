@@ -184,7 +184,19 @@ public class FormVendaActivity extends AppCompatActivity implements View.OnClick
             repositorioItemVenda.inserir(v);
         }
 
+        updateEstoque(itemVendasLista);
+
         finish();
+    }
+
+    public void updateEstoque(ArrayList<ItemVenda> itensVenda) {
+        Produto prod = new Produto();
+        for(ItemVenda v: itensVenda) {
+            prod = new Produto();
+            prod = v.getProduto();
+            prod.setEstoque(prod.getEstoque()-v.getQuant());
+            repositorioProduto.alterar(prod);
+        }
     }
 
     private void exibeData(){
