@@ -92,4 +92,27 @@ public class RepositorioItemVenda {
         }
         return itemVendaArrayAdapter;
     }
+
+    public ItemVendaArrayAdapter buscarItensVendaIdArray(Context context, long id) {
+        ItemVendaArrayAdapter itemVendaArrayAdapter = new ItemVendaArrayAdapter(context, R.layout.lista_itens_itens);
+        Cursor cursor = connection.query(ItemVenda.TABELA, null, null, null, null, null, null);
+
+        if(cursor.getCount()>0) {
+            cursor.moveToFirst();
+            do{
+                ItemVenda itemVenda = new ItemVenda();
+                itemVenda.setId(cursor.getLong(cursor.getColumnIndex(ItemVenda.ID)));
+                itemVenda.setProduto(repositorioProduto.buscarPorId(cursor.getLong(cursor.getColumnIndex(ItemVenda.PRODUTO))));
+                itemVenda.setVenda(repositorioVenda.buscarPorId(cursor.getLong(cursor.getColumnIndex(ItemVenda.VENDA))));
+                itemVenda.setQuant(cursor.getInt(cursor.getColumnIndex(ItemVenda.QUANTIDADE)));
+
+
+                if(itemVenda.getVenda().getId() == id){
+                    itemVendaArrayAdapter.add(itemVenda);
+                }
+
+            }while(cursor.moveToNext());
+        }
+        return itemVendaArrayAdapter;
+    }
 }

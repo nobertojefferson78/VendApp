@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.noberto.br.ufrn.vendapp.ExibirClientesActivity">
+    <item android:id="@+id/cadastrarCliente"
+        android:title="Novo cliente"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_settings"
+        android:title="Exibir todos os clientes"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/todosClientes"
+        android:title="Exibir clientes assiduos"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+</menu>

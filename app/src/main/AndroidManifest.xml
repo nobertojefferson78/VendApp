@@ -45,6 +45,8 @@
         </activity>
         <activity android:name=".ExibirProdutoVendaActivity" >
         </activity>
+        <activity android:name=".DetalheVendaActivity" >
+        </activity>
     </application>
 
 </manifest>

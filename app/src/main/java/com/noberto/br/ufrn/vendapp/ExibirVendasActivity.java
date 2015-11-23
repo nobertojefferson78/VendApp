@@ -22,6 +22,7 @@ import android.widget.SearchView;
 import com.noberto.br.ufrn.vendapp.app.MensageBox;
 import com.noberto.br.ufrn.vendapp.database.DataBase;
 import com.noberto.br.ufrn.vendapp.dominio.RepositorioCliente;
+import com.noberto.br.ufrn.vendapp.dominio.RepositorioItemVenda;
 import com.noberto.br.ufrn.vendapp.dominio.RepositorioVenda;
 import com.noberto.br.ufrn.vendapp.modelo.Cliente;
 import com.noberto.br.ufrn.vendapp.modelo.Venda;
@@ -35,6 +36,7 @@ public class ExibirVendasActivity extends AppCompatActivity implements AdapterVi
     private DataBase dataBase;
     private SQLiteDatabase conn;
     private RepositorioVenda repositorioVenda;
+    private RepositorioItemVenda repositorioItemVenda;
     private ActionBar ab;
     private MenuItem m1, m2;
 
@@ -47,7 +49,7 @@ public class ExibirVendasActivity extends AppCompatActivity implements AdapterVi
 
 
         lstVenda  = (ListView)findViewById(R.id.lstVenda);
-        //lstClientes.setOnItemClickListener(this);
+        lstVenda.setOnItemClickListener(this);
 
         ab = getSupportActionBar();
         ab.setTitle("Vendas");
@@ -65,6 +67,7 @@ public class ExibirVendasActivity extends AppCompatActivity implements AdapterVi
             dataBase = new DataBase(this);
             conn = dataBase.getWritableDatabase();
             repositorioVenda = new RepositorioVenda(conn);
+            repositorioItemVenda = new RepositorioItemVenda(conn);
 
             adpVendas = repositorioVenda.buscarVendas(this);
             lstVenda.setAdapter(adpVendas);
@@ -93,24 +96,10 @@ public class ExibirVendasActivity extends AppCompatActivity implements AdapterVi
 
         final Venda venda = adpVendas.getItem(position);
 
-        new AlertDialog.Builder(this).setMessage(R.string.mensagem_pergunta_editar).setCancelable(true)
-                .setNegativeButton(getString(R.string.mensagem_editar), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
 
-                        editarVenda(view, venda);
-                    }
-
-                })
-                .setPositiveButton(getString(R.string.mensagem_excluir), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        excluirVenda(venda);
-                    }
-
-                })
-                .show();
+        Intent it = new Intent(this, DetalheVendaActivity.class);
+        it.putExtra(PAR_VENDA, venda);
+        startActivityForResult(it, 0);
 
     }
 
@@ -139,6 +128,8 @@ public class ExibirVendasActivity extends AppCompatActivity implements AdapterVi
 
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         conectarBanco();
@@ -158,7 +149,7 @@ public class ExibirVendasActivity extends AppCompatActivity implements AdapterVi
         m2.setIcon(R.drawable.adicionarr);
         m2.setOnMenuItemClickListener(this);
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_exibir_produtos, menu);
+        getMenuInflater().inflate(R.menu.menu_lista_clientes, menu);
         return true;
     }
 

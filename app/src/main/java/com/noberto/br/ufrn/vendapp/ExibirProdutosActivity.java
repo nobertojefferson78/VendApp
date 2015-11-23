@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,7 +37,7 @@ public class ExibirProdutosActivity extends AppCompatActivity implements Adapter
     private SQLiteDatabase connection;
     private RepositorioProduto repositorioProduto;
     private ActionBar ab;
-    private MenuItem m1, m2;
+    private MenuItem m1, m2, editar, apagar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +46,9 @@ public class ExibirProdutosActivity extends AppCompatActivity implements Adapter
 
 
         lstProdutos = (ListView) findViewById(R.id.lstProduto);
+        registerForContextMenu(lstProdutos);
 
-        lstProdutos.setOnItemClickListener(this);
+        //lstProdutos.setOnItemClickListener(this);
 
         ab = getSupportActionBar();
         ab.setTitle("Produtos");
@@ -70,26 +72,9 @@ public class ExibirProdutosActivity extends AppCompatActivity implements Adapter
     public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
 
         final Produto produto = adpProdutos.getItem(position);
-
-        new AlertDialog.Builder(this).setMessage(R.string.mensagem_pergunta_editar).setCancelable(true)
-                .setNegativeButton(getString(R.string.mensagem_editar), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        editarProduto(view, produto);
-                    }
-
-                })
-                .setPositiveButton(getString(R.string.mensagem_excluir), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        excluirProduto(produto);
-                    }
-
-                })
-                .show();
     }
 
-    public void editarProduto(View view, Produto produto) {
+    public void editarProduto(Produto produto) {
         Intent it = new Intent(this, FormProdutoActivity.class);
         it.putExtra(PAR_PRODUTO, produto);
         startActivityForResult(it, 0);
@@ -97,6 +82,57 @@ public class ExibirProdutosActivity extends AppCompatActivity implements Adapter
     public void excluirProduto(Produto produto) {
         repositorioProduto.excluir(produto.getId());
         atualizarLista();
+    }
+
+    @Override
+    public void onCreateContextMenu (ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+        final Produto produto = adpProdutos.getItem(info.position);
+
+        editar = menu.add("Editar");
+        apagar = menu.add("Apagar");
+
+        editar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                //ExibirVendasActivity.this.someFunctionInYourActivity();
+                editarProduto(produto);
+
+                return true;
+            }
+        });
+        apagar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                //ExibirVendasActivity.this.someFunctionInYourActivity();
+                excluir(produto);
+
+                return true;
+            }
+        });;
+    }
+
+    public void excluir(final Produto produto){
+        new AlertDialog.Builder(this).setMessage("Excluir " + produto.getNome() + "?").setCancelable(true)
+                .setNegativeButton("Sim", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        excluirProduto(produto);
+                    }
+
+                })
+                .setPositiveButton("Não", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+
+                })
+                .show();
     }
 
     @Override
@@ -113,24 +149,23 @@ public class ExibirProdutosActivity extends AppCompatActivity implements Adapter
         m1.setActionView(sv);
         m1.setIcon(R.drawable.abc_ic_search_api_mtrl_alpha);
 
-        m2 = menu.add(0, 0, 0, "Adicionar");
-        m2.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        m2.setIcon(R.drawable.adicionarr);
-        m2.setOnMenuItemClickListener(this);
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_exibir_produtos, menu);
+        getMenuInflater().inflate(R.menu.menu_lista_produtos, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.cadastrarProduto) {
+            Intent it = new Intent(this, FormProdutoActivity.class);
+            startActivityForResult(it, 0);
+            return true;
+        } else if(id == R.id.produtoMaisVendido){
+            return true;
+        } else if(id == R.id.todosProdutos){
             return true;
         }
 

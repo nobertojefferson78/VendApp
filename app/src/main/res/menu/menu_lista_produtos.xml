@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.noberto.br.ufrn.vendapp.ExibirProdutosActivity">
+    <item android:id="@+id/cadastrarProduto"
+        android:title="Novo Produto"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/produtoMaisVendido"
+        android:title="Exibir produto mais vendido"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/todosProdutos"
+        android:title="Exibir todos os produtos"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+</menu>

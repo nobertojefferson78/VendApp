@@ -24,7 +24,11 @@ import android.widget.SearchView;
 import com.noberto.br.ufrn.vendapp.app.MensageBox;
 import com.noberto.br.ufrn.vendapp.database.DataBase;
 import com.noberto.br.ufrn.vendapp.dominio.RepositorioCliente;
+import com.noberto.br.ufrn.vendapp.dominio.RepositorioVenda;
 import com.noberto.br.ufrn.vendapp.modelo.Cliente;
+import com.noberto.br.ufrn.vendapp.modelo.Venda;
+
+import java.util.ArrayList;
 
 public class ExibirClientesActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, MenuItem.OnMenuItemClickListener {
 
@@ -36,6 +40,7 @@ public class ExibirClientesActivity extends AppCompatActivity implements Adapter
     private DataBase dataBase;
     private SQLiteDatabase conn;
     private RepositorioCliente repositorioCliente;
+    private RepositorioVenda repositorioVenda;
     private ActionBar ab;
     private MenuItem m1, m2, editar, apagar;
 
@@ -67,6 +72,7 @@ public class ExibirClientesActivity extends AppCompatActivity implements Adapter
             dataBase = new DataBase(this);
             conn = dataBase.getWritableDatabase();
             repositorioCliente = new RepositorioCliente(conn);
+            repositorioVenda = new RepositorioVenda(conn);
 
             adpClientes = repositorioCliente.buscaClientes(this);
 
@@ -145,23 +151,6 @@ public class ExibirClientesActivity extends AppCompatActivity implements Adapter
     public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
 
         final Cliente cliente = adpClientes.getItem(position);
-        /*new AlertDialog.Builder(this).setMessage(R.string.mensagem_pergunta_editar).setCancelable(true)
-                .setNegativeButton(getString(R.string.mensagem_editar), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        editarCliente(view, cliente);
-                    }
-
-                })
-                .setPositiveButton(getString(R.string.mensagem_excluir), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        excluirCliente(cliente);
-                    }
-
-                })
-                .show();*/
 
     }
 
@@ -190,6 +179,17 @@ public class ExibirClientesActivity extends AppCompatActivity implements Adapter
 
     }
 
+    public void clientesMaisAssiduos(){
+        adpClientes = repositorioCliente.buscaClientesAssiduos(this);
+        lstClientes.setAdapter(adpClientes);
+
+        SearchFiltro searchFiltro = new SearchFiltro(adpClientes);
+
+        SearchView sv = new SearchView(this);
+        sv.setOnQueryTextListener(searchFiltro);
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         conectarBanco();
@@ -204,12 +204,8 @@ public class ExibirClientesActivity extends AppCompatActivity implements Adapter
         m1.setActionView(sv);
         m1.setIcon(R.drawable.abc_ic_search_api_mtrl_alpha);
 
-        m2 = menu.add(0, 0, 0, "Adicionar");
-        m2.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        m2.setIcon(R.drawable.adicionarr);
-        m2.setOnMenuItemClickListener(this);
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_exibir_produtos, menu);
+        getMenuInflater().inflate(R.menu.menu_lista_clientes, menu);
         return true;
     }
 
@@ -218,7 +214,15 @@ public class ExibirClientesActivity extends AppCompatActivity implements Adapter
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.todosClientes) {
+            clientesMaisAssiduos();
+            return true;
+        }else if(id == R.id.action_settings){
+            atualizarLista();
+            return true;
+        }else if(id == R.id.cadastrarCliente){
+            Intent it = new Intent(this, FormClienteActivity.class);
+            startActivityForResult(it, 0);
             return true;
         }
 

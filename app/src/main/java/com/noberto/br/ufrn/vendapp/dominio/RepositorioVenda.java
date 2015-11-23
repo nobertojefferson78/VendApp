@@ -12,6 +12,7 @@ import com.noberto.br.ufrn.vendapp.modelo.Cliente;
 import com.noberto.br.ufrn.vendapp.modelo.ItemVenda;
 import com.noberto.br.ufrn.vendapp.modelo.Venda;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -123,4 +124,23 @@ public class RepositorioVenda {
         return null;
 
     }
+
+    public ArrayList<Venda> buscarTodasVendas() {
+
+        ArrayList<Venda> vendas = new ArrayList<Venda>();
+        Cursor cursor = connection.query(Venda.TABELA, null, null, null, null, null, null);
+
+        if(cursor.getCount()>0) {
+            cursor.moveToNext();
+            do{
+                Venda venda = setComponentes(cursor);
+
+                vendas.add(venda);
+            }while(cursor.moveToNext());
+        }
+
+        return vendas;
+    }
+
+
 }
